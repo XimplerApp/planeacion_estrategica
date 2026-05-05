@@ -49,7 +49,17 @@
     th,td{padding:16px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
     th{text-align:left;color:var(--muted);font-weight:700;background:#fbfcfd}
     tbody tr:hover{background:#fcfdfd}
-    .objective-link{color:var(--green);font-weight:700;text-decoration:none;cursor:pointer}
+    .objective-link{color:var(--green);font-weight:700;text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+    .objective-chevron{font-size:12px;color:var(--muted);transition:.2s ease}
+    .objective-cascade-row td{background:#fbfcfd;padding:0 32px 18px 72px}
+    .initiative-cascade{border:1px solid var(--line);border-radius:14px;background:#fff;margin-top:10px;overflow:hidden}
+    .initiative-cascade-head{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);font-weight:700}
+    .initiative-cascade-list{display:flex;flex-direction:column}
+    .initiative-cascade-item{display:grid;grid-template-columns:1.2fr .8fr .7fr .6fr;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;align-items:center}
+    .initiative-cascade-item:last-child{border-bottom:none}
+    .initiative-cascade-title{font-weight:700;color:var(--text)}
+    .initiative-cascade-meta{color:var(--muted);font-size:12px}
+    .initiative-empty{padding:14px;color:var(--muted);font-size:13px}
     .actions-inline{display:flex;flex-wrap:wrap;gap:8px}
     .progress-bar{width:120px;height:10px;background:#edf1f5;border-radius:999px;overflow:hidden;margin-bottom:6px}
     .progress-fill{height:100%;border-radius:999px}
@@ -148,6 +158,10 @@
     .history-subnote{display:block;font-size:11px;color:var(--muted);margin-top:2px}
     .hidden-indicator-note{font-size:12px;color:var(--muted);margin-bottom:10px}
     .indicator-hidden-row{background:#fbfcfe}
+    .mini-item-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .inline-add.stack .grid-2{width:100%}
+    .attachment-anchor-btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .tag-input-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
     .meta-action-wrap{display:flex;align-items:center;gap:6px}
     .activity-head-actions{display:flex;align-items:center;gap:8px}
     .activity-header-right{display:flex;align-items:center;gap:10px}
@@ -164,11 +178,13 @@
     .mini-item-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:4px}
     .mini-item-title{font-weight:700}
     .mini-item-sub{color:var(--muted);font-size:12px;line-height:1.4}
-    .check-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+    .check-row{display:grid;grid-template-columns:22px minmax(120px,1fr) 142px auto;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
     .check-row:last-child{border-bottom:none}
     .check-row input[type="checkbox"]{width:16px;height:16px}
-    .check-row.done .check-label{text-decoration:line-through;color:var(--muted)}
-    .check-label{flex:1;font-size:14px}
+    .check-row.done .check-edit-text{text-decoration:line-through;color:var(--muted)}
+    .check-edit-text,.check-edit-date{padding:7px 8px;font-size:13px;border-radius:8px}
+    .check-edit-date{min-width:138px}
+    .check-header{display:grid;grid-template-columns:22px minmax(120px,1fr) 142px auto;gap:10px;align-items:center;font-size:12px;color:var(--muted);font-weight:700;padding:0 0 6px;border-bottom:1px solid var(--line)}
     .inline-add.stack{display:none;flex-direction:column;gap:8px}
     .inline-add.stack.open{display:flex}
     .link-anchor{color:var(--blue);text-decoration:none;font-weight:700;word-break:break-all}
@@ -176,8 +192,37 @@
     .file-upload-wrap input[type="file"]{max-width:100%}
     .pill-action{border:1px solid var(--line-dark);background:#fff;border-radius:999px;padding:4px 8px;font-size:11px;cursor:pointer}
     .activity-modal-form{padding:22px}
+
+    .hidden{display:none !important}
+    .planning-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:18px}
+    .planning-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+    .planning-card h3{margin:0;font-size:18px;color:var(--text)}
+    .planning-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+    .planning-meta{display:grid;gap:6px;color:#526070;font-size:13px}
+    .planning-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+    .planning-tech-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:16px;box-shadow:var(--shadow)}
+    .planning-tech-card h3{margin:0 0 12px;font-size:16px}
+    .planning-tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .planning-tech-item{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fbfcfd}
+    .planning-tech-label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:5px}
+    .planning-tech-value{font-size:14px;font-weight:700;color:var(--text)}
+    .breadcrumb-btn{border:none;background:transparent;color:var(--green);font-weight:800;cursor:pointer;padding:0;font-size:14px;font-family:inherit}
+
+    .initiative-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+    .action-list{display:flex;flex-direction:column;gap:10px;padding:22px}
+    .action-row{border:1px solid var(--line-dark);border-radius:14px;padding:14px;background:#fff;display:grid;grid-template-columns:1.2fr .9fr .8fr auto;gap:12px;align-items:center}
+    .action-title{font-weight:800;color:var(--text)}
+    .action-detail-layout{display:grid;grid-template-columns:1.25fr .9fr;min-height:560px}
+    .action-detail-left{border-right:1px solid var(--line)}
+    .action-detail-section{padding:18px 22px;border-bottom:1px solid var(--line)}
+    .action-mini-bar{display:grid;grid-template-columns:120px 1fr 120px 1fr;align-items:center;background:#f2f4f7;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .action-mini-bar > div{padding:12px 16px}
+    .action-side-block{padding:16px;border-bottom:1px solid var(--line)}
+    .action-side-title{font-size:12px;font-weight:800;text-transform:uppercase;color:#667085;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+    @media (max-width:900px){.action-detail-layout,.action-row{grid-template-columns:1fr}.action-detail-left{border-right:none}.action-mini-bar{grid-template-columns:1fr}}
+
     @media (max-width:1100px){
-      .filters,.grid-2,.grid-3,.grid-4,.three-col,.comment-form,.detail-grid-top,.detail-main,.form-grid{grid-template-columns:1fr}
+      .filters,.grid-2,.grid-3,.grid-4,.three-col,.comment-form,.detail-grid-top,.detail-main,.form-grid,.planning-tech-grid{grid-template-columns:1fr}
       .col + .col,.detail-right,.detail-top-box + .detail-top-box{border-left:none;border-top:1px solid var(--line)}
     }
     @media (max-width:780px){
@@ -192,46 +237,137 @@
 </head>
 <body>
   <div class="page">
-    <div class="topbar">
-      <div class="title-wrap">
-        <h1>Objetivos</h1>
-        <p>Primer index funcional para el módulo de seguimiento estratégico de Ximpler.</p>
+    <div id="planningView">
+      <div class="topbar">
+        <div class="title-wrap">
+          <h1>Planeaciones</h1>
+          <p>Crea planes independientes y entra al detalle de cada uno para gestionar sus objetivos.</p>
+        </div>
+        <button id="openPlanningFormBtn" class="btn-primary">
+          <span>Nueva Planeación</span>
+          <span class="plus">+</span>
+        </button>
       </div>
-      <button id="openFormBtn" class="btn-primary">
-        <span>Nuevo Objetivo</span>
-        <span class="plus">+</span>
-      </button>
+
+      <div class="card">
+        <div class="filters">
+          <input id="planningSearchInput" class="input" type="text" placeholder="Buscar planeación" />
+          <select id="planningStatusFilter" class="select">
+            <option value="all">Todos los estatus</option>
+            <option value="activo" selected>Activas</option>
+            <option value="en_riesgo">En riesgo</option>
+            <option value="pausado">Pausadas</option>
+            <option value="cumplido">Cumplidas</option>
+          </select>
+        </div>
+        <div id="planningCards" class="planning-grid"></div>
+        <div id="planningEmptyState" class="empty-state" style="display:none;">No hay planeaciones que coincidan con el filtro.</div>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="filters">
-        <input id="searchInput" class="input" type="text" placeholder="Buscar / Filtrar" />
-        <select id="statusFilter" class="select">
-          <option value="all">Todos los estatus</option>
-          <option value="activo" selected>Activos</option>
-          <option value="en_riesgo">En riesgo</option>
-          <option value="pausado">Pausados</option>
-          <option value="cumplido">Cumplidos</option>
-        </select>
+    <div id="objectivesView" class="hidden">
+      <div class="topbar">
+        <div class="title-wrap">
+          <button id="backToPlanningsBtn" class="breadcrumb-btn" type="button">← Volver a Planeaciones</button>
+          <h1 id="objectivesTitle">Objetivos</h1>
+          <p id="objectivesSubtitle">Objetivos asociados a esta planeación.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="openKpiBoardBtn" class="btn-secondary" type="button">Tablero KPI´s</button>
+          <button id="openFormBtn" class="btn-primary">
+            <span>Nuevo Objetivo</span>
+            <span class="plus">+</span>
+          </button>
+        </div>
       </div>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Objetivo</th>
-              <th>Avance Cualitativo</th>
-              <th>Avance Cuantitativo</th>
-              <th>Líder Responsable</th>
-              <th>Fecha</th>
-              <th>Estatus</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="objectivesBody"></tbody>
-        </table>
+      <div id="planningTechCard" class="planning-tech-card"></div>
+
+      <div class="card">
+        <div class="filters">
+          <input id="searchInput" class="input" type="text" placeholder="Buscar / Filtrar" />
+          <select id="statusFilter" class="select">
+            <option value="all">Todos los estatus</option>
+            <option value="activo" selected>Activos</option>
+            <option value="en_riesgo">En riesgo</option>
+            <option value="pausado">Pausados</option>
+            <option value="cumplido">Cumplidos</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Objetivo</th>
+                <th>Avance Cualitativo</th>
+                <th>Avance Cuantitativo</th>
+                <th>Líder Responsable</th>
+                <th>Fecha</th>
+                <th>Estatus</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="objectivesBody"></tbody>
+          </table>
+        </div>
+        <div id="emptyState" class="empty-state" style="display:none;">No hay objetivos que coincidan con el filtro.</div>
       </div>
-      <div id="emptyState" class="empty-state" style="display:none;">No hay objetivos que coincidan con el filtro.</div>
+    </div>
+  </div>
+
+  <div id="planningModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="width:min(780px,100%)">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="planningModalTitle">Nueva Planeación</h2>
+          <p>Registra una planeación para agrupar objetivos, indicadores, actividades y evidencias.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="closePlanningBtn" class="btn-secondary" type="button">Cancelar</button>
+          <button id="savePlanningBtn" class="btn-primary" type="button"><span>Guardar Planeación</span><span>💾</span></button>
+        </div>
+      </div>
+      <form id="planningForm" style="padding:22px">
+        <div class="field">
+          <label class="required" for="planningName">Nombre de la planeación</label>
+          <input id="planningName" class="input" type="text" placeholder="Ej. Planeación Comercial 2026" />
+        </div>
+        <div class="field">
+          <label for="planningDescription">Descripción</label>
+          <textarea id="planningDescription" class="textarea" placeholder="Describe el propósito, alcance o enfoque del plan..."></textarea>
+        </div>
+        <div class="field">
+          <label for="planningMap">Mapa</label>
+          <input id="planningMap" class="input" type="text" placeholder="Ej. Jerarquía / Área / Sucursal / Región / Unidad de negocio" />
+          <div class="hint">Campo abierto para clasificar la planeación por jerarquía, área, sucursal u otra estructura interna.</div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="planningOwner">Responsable</label>
+            <input id="planningOwner" class="input" type="text" placeholder="Responsable principal" />
+          </div>
+          <div class="field">
+            <label for="planningStatus">Estatus</label>
+            <select id="planningStatus" class="select">
+              <option value="activo" selected>Activo</option>
+              <option value="en_riesgo">En riesgo</option>
+              <option value="pausado">Pausado</option>
+              <option value="cumplido">Cumplido</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="planningStartDate">Fecha inicio</label>
+            <input id="planningStartDate" class="input" type="date" />
+          </div>
+          <div class="field">
+            <label for="planningEndDate">Fecha compromiso</label>
+            <input id="planningEndDate" class="input" type="date" />
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -317,11 +453,11 @@
 
             <div class="section">
               <h3>
-                <span>Actividades alineadas al objetivo</span>
+                <span>Iniciativas alineadas al objetivo</span>
                 <button id="addActivityBtn" class="small-btn" type="button">+ Agregar</button>
               </h3>
               <div id="activitiesList" class="repeat-list"></div>
-              <div class="hint">El promedio de cumplimiento de estas actividades impacta el Avance Cualitativo del objetivo.</div>
+              <div class="hint">El promedio de cumplimiento de estas iniciativas impacta el Avance Cualitativo del objetivo.</div>
             </div>
           </div>
 
@@ -499,18 +635,18 @@
     <div class="modal-card" style="width:min(760px,100%)">
       <div class="modal-header">
         <div class="modal-title">
-          <h2 id="activityModalTitle">Nueva Actividad</h2>
-          <p id="activityModalSubtitle">Agrega o edita una actividad desde la tarjeta del objetivo.</p>
+          <h2 id="activityModalTitle">Nueva Iniciativa</h2>
+          <p id="activityModalSubtitle">Agrega o edita una iniciativa desde la tarjeta del objetivo.</p>
         </div>
         <div class="modal-actions">
           <button id="closeActivityBtn" class="btn-secondary" type="button">Cancelar</button>
-          <button id="saveActivityBtn" class="btn-primary" type="button"><span id="saveActivityBtnLabel">Guardar Actividad</span><span>💾</span></button>
+          <button id="saveActivityBtn" class="btn-primary" type="button"><span id="saveActivityBtnLabel">Guardar Iniciativa</span><span>💾</span></button>
         </div>
       </div>
       <form id="activityModalForm" class="activity-modal-form">
         <div class="grid-2">
           <div class="field">
-            <label class="required" for="modalActivityName">Actividad</label>
+            <label class="required" for="modalActivityName">Iniciativa</label>
             <input id="modalActivityName" class="input" type="text" placeholder="Ej. Seguimiento a cartera crítica" />
           </div>
           <div class="field">
@@ -537,6 +673,63 @@
           </div>
         </div>
       </form>
+    </div>
+  </div>
+
+
+
+  <div id="initiativeActionsModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="width:min(980px,100%)">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="initiativeActionsTitle">Acciones de la Iniciativa</h2>
+          <p id="initiativeActionsSubtitle">Listado de acciones asignadas.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="closeInitiativeActionsBtn" class="btn-secondary" type="button">Cerrar</button>
+          <button id="newActionBtn" class="btn-primary" type="button"><span>Nueva Acción</span><span>+</span></button>
+        </div>
+      </div>
+      <div id="initiativeActionsContent" class="action-list"></div>
+    </div>
+  </div>
+
+  <div id="actionDetailModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="width:min(1120px,100%)">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="actionDetailTitle">Nueva Acción</h2>
+          <p id="actionDetailSubtitle">Registra el detalle general de la acción.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="closeActionDetailBtn" class="btn-secondary" type="button">Cancelar</button>
+          <button id="saveActionDetailBtn" class="btn-primary" type="button"><span>Guardar Acción</span><span>💾</span></button>
+        </div>
+      </div>
+      <div class="action-detail-layout">
+        <div class="action-detail-left">
+          <div class="action-detail-section">
+            <label class="required" for="actionTitleInput">Título de la Acción</label>
+            <input id="actionTitleInput" class="input" type="text" placeholder="Ej. Enviar seguimiento a clientes críticos" />
+            <div class="field" style="margin-top:14px"><label for="actionDetailInput">Detalle de la Acción</label><textarea id="actionDetailInput" class="textarea" placeholder="Describe el alcance, entregable o contexto de esta acción..."></textarea></div>
+          </div>
+          <div class="action-detail-section">
+            <div class="grid-2"><div><div class="subtle-label">Creada por</div><input id="actionCreatedByInput" class="input" type="text" placeholder="Creador" /></div><div><label for="actionStatusInput">Estado</label><select id="actionStatusInput" class="select"><option>Por hacer</option><option>En progreso</option><option>Terminada</option><option>Pausada</option></select></div></div>
+            <div class="grid-2" style="margin-top:14px"><div><label for="actionResponsibleInput">Responsable</label><input id="actionResponsibleInput" class="input" type="text" placeholder="Responsable" /></div><div><label for="actionInvitedInput">Invitados</label><input id="actionInvitedInput" class="input" type="text" placeholder="Separar por coma" /></div></div>
+          </div>
+          <div class="action-detail-section"><div class="tabs"><button class="tab-btn active" type="button">Comentarios</button><button class="tab-btn" type="button">Historial</button><button class="tab-btn" type="button">Tiempos</button></div><textarea id="actionCommentInput" class="textarea" placeholder="Añadir comentario..."></textarea></div>
+        </div>
+        <div class="action-detail-right">
+          <div class="action-side-block"><div class="action-side-title">Fechas</div><div class="grid-2"><div><label for="actionStartInput">Inicio</label><input id="actionStartInput" class="input" type="date" /></div><div><label for="actionDueInput">Fecha compromiso</label><input id="actionDueInput" class="input" type="date" /></div></div></div>
+          <div class="action-mini-bar"><div><strong>Gastado</strong></div><div><input id="actionSpentInput" class="input" type="number" step="0.01" placeholder="$ 0" /></div><div><strong>Meta</strong></div><div><input id="actionBudgetInput" class="input" type="number" step="0.01" placeholder="$ 0" /></div></div>
+          <div class="action-side-block"><div class="action-side-title">Tiempo invertido</div><input id="actionTimeInput" class="input" type="text" placeholder="Ej. 2 h 30 min" /></div>
+          <div class="action-side-block"><div class="action-side-title">Recordatorios</div><input id="actionRemindersInput" class="input" type="text" placeholder="Separar por coma" /></div>
+          <div class="action-side-block"><div class="action-side-title">Etiquetas</div><input id="actionTagsInput" class="input" type="text" placeholder="Separar por coma" /></div>
+          <div class="action-side-block"><div class="action-side-title">Check List</div><textarea id="actionChecklistInput" class="textarea" placeholder="Un punto por línea"></textarea></div>
+          <div class="action-side-block"><div class="action-side-title">Enlaces</div><textarea id="actionLinksInput" class="textarea" placeholder="Un enlace por línea"></textarea></div>
+          <div class="action-side-block"><div class="action-side-title">Archivos Adjuntos</div><input id="actionAttachmentsInput" type="file" multiple /><div class="hint">Se registra el nombre del archivo.</div></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -619,8 +812,8 @@
       <button class="remove-row" type="button">Eliminar</button>
       <div class="grid-2">
         <div class="field">
-          <label>Actividad</label>
-          <input class="input activity-name" type="text" placeholder="Ej. Actualizar CxC" />
+          <label>Iniciativa</label>
+          <input class="input activity-name" type="text" placeholder="Ej. Seguimiento a cartera crítica" />
         </div>
         <div class="field">
           <label>Responsable</label>
@@ -649,12 +842,29 @@
   </template>
 
   <script>
-    const STORAGE_KEYS = ['ximpler_objetivos_demo_v6','ximpler_objetivos_demo_v5','ximpler_objetivos_demo_v4','ximpler_objetivos_demo_v3','ximpler_objetivos_demo_v1'];
-    const SAVE_KEY = 'ximpler_objetivos_demo_v6';
+    const STORAGE_KEYS = ['ximpler_objetivos_demo_v7_planes','ximpler_objetivos_demo_v6_3','ximpler_objetivos_demo_v6_1','ximpler_objetivos_demo_v6','ximpler_objetivos_demo_v5','ximpler_objetivos_demo_v4','ximpler_objetivos_demo_v3','ximpler_objetivos_demo_v1'];
+    const SAVE_KEY = 'ximpler_objetivos_demo_v7_planes';
+    const PLANNING_SAVE_KEY = 'ximpler_planeaciones_demo_v1';
+
+    const samplePlannings = [
+      {
+        id: 'plan_demo_2026',
+        name: 'Planeación Estratégica 2026',
+        description: 'Plan base para gestionar objetivos, indicadores, actividades y seguimiento estratégico.',
+        map: 'Dirección General / Planeación Estratégica',
+        owner: 'Melchor Iván Angulo',
+        startDate: '2026-01-01',
+        endDate: '2026-12-31',
+        status: 'activo',
+        createdAt: new Date().toISOString(),
+        history: ['Planeación demo creada como base inicial.']
+      }
+    ];
 
     const sampleObjectives = [
       {
         id: crypto.randomUUID(),
+        planningId: 'plan_demo_2026',
         name: 'Recuperar Cartera Vencida',
         description: 'Recuperar cartera vencida correspondiente al periodo 2019 y 2020.',
         startDate: '2021-05-13',
@@ -676,6 +886,7 @@
       },
       {
         id: crypto.randomUUID(),
+        planningId: 'plan_demo_2026',
         name: 'Posicionar la marca en redes sociales',
         description: 'Incrementar notoriedad y tracción digital de marca en redes clave.',
         startDate: '2021-05-13',
@@ -697,7 +908,17 @@
       }
     ];
 
-    const state = { objectives: loadObjectives(), formTags: [], editingId: null, detailId: null, detailTab: 'comments', detailIndicatorView: 'active', indicatorModalMode: 'create', editingIndicatorIndex: null, valueHistoryModalIndicatorIndex: null, metaPlanIndicatorIndex: null, activityModalMode: 'create', editingActivityIndex: null };
+    const state = { plannings: loadPlannings(), objectives: [], currentPlanningId: null, editingPlanningId: null, expandedObjectiveIds: new Set(), formTags: [], editingId: null, detailId: null, detailTab: 'comments', detailIndicatorView: 'active', indicatorModalMode: 'create', editingIndicatorIndex: null, valueHistoryModalIndicatorIndex: null, metaPlanIndicatorIndex: null, activityModalMode: 'create', editingActivityIndex: null, actionObjectiveId: null, actionActivityIndex: null, editingActionIndex: null };
+    state.objectives = loadObjectives().map(obj => ({ ...obj, planningId: obj.planningId || state.plannings[0]?.id || 'plan_demo_2026' }));
+    state.objectives = state.objectives.map(obj => state.plannings.some(plan => plan.id === obj.planningId) ? obj : ({ ...obj, planningId: state.plannings[0]?.id || 'plan_demo_2026' }));
+    const planningView = document.getElementById('planningView');
+    const objectivesView = document.getElementById('objectivesView');
+    const planningCards = document.getElementById('planningCards');
+    const planningEmptyState = document.getElementById('planningEmptyState');
+    const planningModal = document.getElementById('planningModal');
+    const planningForm = document.getElementById('planningForm');
+    const objectivesTitle = document.getElementById('objectivesTitle');
+    const objectivesSubtitle = document.getElementById('objectivesSubtitle');
     const objectivesBody = document.getElementById('objectivesBody');
     const emptyState = document.getElementById('emptyState');
     const formModal = document.getElementById('formModal');
@@ -716,6 +937,9 @@
     const metaPlanRows = document.getElementById('metaPlanRows');
     const activityModal = document.getElementById('activityModal');
     const activityModalForm = document.getElementById('activityModalForm');
+    const initiativeActionsModal = document.getElementById('initiativeActionsModal');
+    const initiativeActionsContent = document.getElementById('initiativeActionsContent');
+    const actionDetailModal = document.getElementById('actionDetailModal');
 
     function normalizeComment(comment){
       if (typeof comment === 'string') return { author:'Sistema', text:comment, date:new Date().toISOString().slice(0,10) };
@@ -739,11 +963,38 @@
       };
     }
 
+
+
+    function normalizeInitiativeAction(action = {}){
+      return {
+        id: action.id || crypto.randomUUID(),
+        title: action.title || action.name || '',
+        responsible: action.responsible || action.owner || '',
+        dueDate: action.dueDate || action.date || '',
+        detail: action.detail || action.description || '',
+        status: action.status || 'Por hacer',
+        createdBy: action.createdBy || '',
+        invited: Array.isArray(action.invited) ? action.invited : (typeof action.invited === 'string' ? action.invited.split(',').map(x=>x.trim()).filter(Boolean) : []),
+        startDate: action.startDate || '',
+        spent: Number(action.spent || 0),
+        budget: Number(action.budget || 0),
+        timeInvested: action.timeInvested || '',
+        reminders: Array.isArray(action.reminders) ? action.reminders : [],
+        tags: Array.isArray(action.tags) ? action.tags : [],
+        checklist: Array.isArray(action.checklist) ? action.checklist : [],
+        links: Array.isArray(action.links) ? action.links : [],
+        attachments: Array.isArray(action.attachments) ? action.attachments : [],
+        comment: action.comment || '',
+        history: Array.isArray(action.history) ? action.history : []
+      };
+    }
+
     function normalizeObjective(obj){
       const invited = obj.invited || obj.involved || [];
       const activities = obj.activities || obj.initiatives || [];
       return {
         id: obj.id || crypto.randomUUID(),
+        planningId: obj.planningId || 'plan_demo_2026',
         name: obj.name || '',
         description: obj.description || '',
         startDate: obj.startDate || '',
@@ -769,14 +1020,17 @@
           owner: act.owner || '',
           dueDate: act.dueDate || '',
           status: act.status || 'pendiente',
-          progress: Number(act.progress ?? 0)
+          progress: Number(act.progress ?? 0),
+          actions: Array.isArray(act.actions) ? act.actions.map(normalizeInitiativeAction) : []
         })),
         reminders: Array.isArray(obj.reminders) ? obj.reminders.map(item => ({
           text: item?.text || item?.title || '',
-          dueDate: item?.dueDate || item?.date || ''
+          dueDate: item?.dueDate || item?.date || '',
+          dueTime: item?.dueTime || item?.time || ''
         })).filter(item => item.text) : [],
         checklist: Array.isArray(obj.checklist) ? obj.checklist.map(item => ({
           text: item?.text || item?.label || '',
+          dueDate: item?.dueDate || item?.date || item?.commitmentDate || '',
           done: Boolean(item?.done)
         })).filter(item => item.text) : [],
         links: Array.isArray(obj.links) ? obj.links.map(item => ({
@@ -786,6 +1040,8 @@
         attachments: Array.isArray(obj.attachments) ? obj.attachments.map(item => ({
           name: item?.name || item?.fileName || 'Archivo',
           size: Number(item?.size || 0),
+          type: item?.type || item?.mimeType || '',
+          dataUrl: item?.dataUrl || item?.url || '',
           addedAt: item?.addedAt || item?.date || new Date().toISOString()
         })) : [],
         tags: Array.isArray(obj.tags) ? obj.tags : [],
@@ -795,6 +1051,39 @@
         comments: Array.isArray(obj.comments) ? obj.comments.map(normalizeComment).filter(c=>c.text) : [],
         history: Array.isArray(obj.history) ? obj.history : []
       };
+    }
+
+
+    function normalizePlanning(plan){
+      return {
+        id: plan.id || crypto.randomUUID(),
+        name: plan.name || '',
+        description: plan.description || '',
+        map: plan.map || '',
+        owner: plan.owner || '',
+        startDate: plan.startDate || '',
+        endDate: plan.endDate || '',
+        status: plan.status || 'activo',
+        createdAt: plan.createdAt || new Date().toISOString(),
+        history: Array.isArray(plan.history) ? plan.history : []
+      };
+    }
+
+    function loadPlannings(){
+      const saved = localStorage.getItem(PLANNING_SAVE_KEY);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length) return parsed.map(normalizePlanning);
+        } catch(e) {}
+      }
+      return samplePlannings.map(normalizePlanning);
+    }
+
+    function persistPlannings(){ localStorage.setItem(PLANNING_SAVE_KEY, JSON.stringify(state.plannings)); }
+
+    function getCurrentPlanning(){
+      return state.plannings.find(plan => plan.id === state.currentPlanningId) || null;
     }
 
     function loadObjectives(){
@@ -866,6 +1155,21 @@
       const value = date instanceof Date ? date : new Date(date);
       return new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }).format(value);
     }
+    function formatTime(timeString){
+      if (!timeString) return '—';
+      const [h='00', m='00'] = String(timeString).split(':');
+      const date = new Date();
+      date.setHours(Number(h), Number(m), 0, 0);
+      return new Intl.DateTimeFormat('es-MX', { hour:'2-digit', minute:'2-digit' }).format(date);
+    }
+    function readFileAsDataUrl(file){
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error || new Error('No se pudo leer el archivo.'));
+        reader.readAsDataURL(file);
+      });
+    }
     function askActionUser(defaultName = ''){
       const seed = localStorage.getItem('ximpler_last_actor') || defaultName || '';
       const answer = prompt('¿Quién realiza esta acción?', seed);
@@ -878,9 +1182,20 @@
       localStorage.setItem('ximpler_last_actor', name);
       return name;
     }
-    function addHistoryEntry(obj, message){
+    function buildHistoryMessage(action, actor = 'Sistema', when = new Date()){
+      const cleanAction = String(action || '').trim().replace(/\.+$/, '');
+      const cleanActor = String(actor || 'Sistema').trim() || 'Sistema';
+      return `${cleanAction} por ${cleanActor} el ${formatDateTime(when)}.`;
+    }
+    function addHistoryEntry(obj, action, actor = 'Sistema'){
       if (!Array.isArray(obj.history)) obj.history = [];
-      obj.history.unshift(message);
+      obj.history.unshift(buildHistoryMessage(action, actor));
+    }
+    function renderHistoryEntry(item){
+      const text = String(item || '');
+      const hasActorAndTime = /\bpor\b/.test(text) && /\bel\b/.test(text) && /\d{1,2}:\d{2}/.test(text);
+      if (hasActorAndTime) return text;
+      return `${text} <span class="history-subnote">Registro anterior sin usuario/hora detallada.</span>`;
     }
     function escapeHtml(text){ const div = document.createElement('div'); div.textContent = String(text ?? ''); return div.innerHTML; }
     function clearMultiSelect(id){ Array.from(document.getElementById(id).options).forEach(opt => opt.selected = false); }
@@ -933,7 +1248,8 @@
         owner: item.querySelector('.activity-owner').value.trim(),
         dueDate: item.querySelector('.activity-date').value,
         status: item.querySelector('.activity-status').value,
-        progress: Number(item.querySelector('.activity-progress').value || 0)
+        progress: Number(item.querySelector('.activity-progress').value || 0),
+        actions: []
       })).filter(item => item.name);
     }
 
@@ -969,11 +1285,10 @@
     function openFormModal(){ formModal.classList.add('open'); formModal.setAttribute('aria-hidden', 'false'); }
     function closeFormModal(){ formModal.classList.remove('open'); formModal.setAttribute('aria-hidden', 'true'); }
 
-    function buildHistory(previous, name){
-      const stamp = new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(new Date());
-      if (!previous) return [`Objetivo creado el ${stamp}.`];
+    function buildHistory(previous, name, actor){
+      if (!previous) return [buildHistoryMessage(`Objetivo creado (${name})`, actor)];
       const history = Array.isArray(previous.history) ? [...previous.history] : [];
-      history.unshift(`Objetivo actualizado (${name}) el ${stamp}.`);
+      history.unshift(buildHistoryMessage(`Objetivo actualizado (${name})`, actor));
       return history;
     }
 
@@ -984,8 +1299,11 @@
       if (!leader) return alert('Selecciona un Líder Responsable.');
 
       const previous = state.editingId ? state.objectives.find(obj => obj.id === state.editingId) : null;
+      const actor = askActionUser(leader);
+      if (!actor) return;
       const objective = normalizeObjective({
         id: state.editingId || crypto.randomUUID(),
+        planningId: previous?.planningId || state.currentPlanningId || state.plannings[0]?.id || 'plan_demo_2026',
         name,
         description: document.getElementById('objectiveDescription').value.trim(),
         startDate: document.getElementById('startDate').value,
@@ -1000,7 +1318,11 @@
         linkedProjects: getMultiSelectValues(document.getElementById('linkedProjects')),
         status: document.getElementById('objectiveStatus').value,
         comments: previous?.comments || [],
-        history: buildHistory(previous, name)
+        reminders: previous?.reminders || [],
+        checklist: previous?.checklist || [],
+        links: previous?.links || [],
+        attachments: previous?.attachments || [],
+        history: buildHistory(previous, name, actor)
       });
 
       if (state.editingId){
@@ -1050,11 +1372,168 @@
       if (state.detailId === id) closeDetailModal();
     }
 
+
+    function showPlanningView(){
+      state.currentPlanningId = null;
+      planningView.classList.remove('hidden');
+      objectivesView.classList.add('hidden');
+      renderPlannings();
+    }
+
+    function openPlanning(id){
+      state.currentPlanningId = id;
+      planningView.classList.add('hidden');
+      objectivesView.classList.remove('hidden');
+      document.getElementById('searchInput').value = '';
+      document.getElementById('statusFilter').value = 'activo';
+      renderObjectives();
+    }
+
+    function resetPlanningForm(){
+      planningForm.reset();
+      state.editingPlanningId = null;
+      document.getElementById('planningModalTitle').textContent = 'Nueva Planeación';
+      document.getElementById('planningStatus').value = 'activo';
+    }
+
+    function openPlanningModal(mode = 'create', planningId = null){
+      resetPlanningForm();
+      if (mode === 'edit') {
+        const plan = state.plannings.find(item => item.id === planningId);
+        if (!plan) return;
+        state.editingPlanningId = planningId;
+        document.getElementById('planningModalTitle').textContent = 'Editar Planeación';
+        document.getElementById('planningName').value = plan.name || '';
+        document.getElementById('planningDescription').value = plan.description || '';
+        document.getElementById('planningMap').value = plan.map || '';
+        document.getElementById('planningOwner').value = plan.owner || '';
+        document.getElementById('planningStartDate').value = plan.startDate || '';
+        document.getElementById('planningEndDate').value = plan.endDate || '';
+        document.getElementById('planningStatus').value = plan.status || 'activo';
+      }
+      planningModal.classList.add('open');
+      planningModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('planningName').focus();
+    }
+
+    function closePlanningModal(){
+      planningModal.classList.remove('open');
+      planningModal.setAttribute('aria-hidden', 'true');
+      resetPlanningForm();
+    }
+
+    function savePlanning(){
+      const name = document.getElementById('planningName').value.trim();
+      if (!name) return alert('Ingresa el nombre de la planeación.');
+      const actor = askActionUser(document.getElementById('planningOwner').value.trim() || 'Sistema');
+      if (!actor) return;
+
+      const previous = state.editingPlanningId ? state.plannings.find(item => item.id === state.editingPlanningId) : null;
+      const planning = normalizePlanning({
+        id: previous?.id || crypto.randomUUID(),
+        name,
+        description: document.getElementById('planningDescription').value.trim(),
+        map: document.getElementById('planningMap').value.trim(),
+        owner: document.getElementById('planningOwner').value.trim(),
+        startDate: document.getElementById('planningStartDate').value,
+        endDate: document.getElementById('planningEndDate').value,
+        status: document.getElementById('planningStatus').value,
+        createdAt: previous?.createdAt || new Date().toISOString(),
+        history: previous?.history || []
+      });
+      planning.history.unshift(`${previous ? 'Planeación actualizada' : 'Planeación creada'} por ${actor} el ${formatDateTime()}.`);
+
+      if (previous) {
+        const index = state.plannings.findIndex(item => item.id === previous.id);
+        state.plannings[index] = planning;
+      } else {
+        state.plannings.unshift(planning);
+      }
+
+      persistPlannings();
+      closePlanningModal();
+      renderPlannings();
+    }
+
+    function deletePlanning(id){
+      const plan = state.plannings.find(item => item.id === id);
+      if (!plan) return;
+      const relatedCount = state.objectives.filter(obj => obj.planningId === id).length;
+      const message = relatedCount
+        ? `¿Seguro que deseas eliminar la planeación "${plan.name}"? También se eliminarán ${relatedCount} objetivo(s) asociados.`
+        : `¿Seguro que deseas eliminar la planeación "${plan.name}"?`;
+      if (!confirm(message)) return;
+      state.plannings = state.plannings.filter(item => item.id !== id);
+      state.objectives = state.objectives.filter(obj => obj.planningId !== id);
+      persistPlannings();
+      persistObjectives();
+      renderPlannings();
+    }
+
+    function renderPlannings(){
+      const query = document.getElementById('planningSearchInput').value.trim().toLowerCase();
+      const status = document.getElementById('planningStatusFilter').value;
+      const filtered = state.plannings.filter(plan => {
+        const haystack = [plan.name, plan.description, plan.map, plan.owner].join(' ').toLowerCase();
+        return (!query || haystack.includes(query)) && (status === 'all' || plan.status === status);
+      });
+
+      planningCards.innerHTML = '';
+      planningEmptyState.style.display = filtered.length ? 'none' : 'block';
+
+      filtered.forEach(plan => {
+        const objectives = state.objectives.filter(obj => obj.planningId === plan.id);
+        const ql = objectives.length ? Math.round(objectives.map(obj => calculateQualitativeProgress(obj.activities)).reduce((a,b)=>a+b,0) / objectives.length) : 0;
+        const qt = objectives.length ? Math.round(objectives.map(obj => calculateQuantitativeProgress(obj.indicators)).reduce((a,b)=>a+b,0) / objectives.length) : 0;
+        const card = document.createElement('div');
+        card.className = 'planning-card';
+        card.innerHTML = `
+          <div>
+            <h3>${escapeHtml(plan.name)}</h3>
+            <p>${escapeHtml(plan.description || 'Sin descripción')}</p>
+          </div>
+          <div class="planning-meta">
+            <div><strong>Responsable:</strong> ${escapeHtml(plan.owner || '—')}</div>
+            <div><strong>Mapa:</strong> ${escapeHtml(plan.map || '—')}</div>
+            <div><strong>Fecha:</strong> ${formatDate(plan.startDate)} → ${formatDate(plan.endDate)}</div>
+            <div><strong>Objetivos:</strong> ${objectives.length}</div>
+            <div><strong>Avance promedio:</strong> Cualitativo ${ql}% · Cuantitativo ${qt}%</div>
+            <div><span class="status-badge status-${plan.status}">${statusLabel(plan.status)}</span></div>
+          </div>
+          <div class="planning-actions">
+            <button class="btn-primary small" type="button" data-open-plan="${plan.id}">Entrar</button>
+            <button class="btn-secondary small" type="button" data-edit-plan="${plan.id}">Editar</button>
+            <button class="btn-danger small" type="button" data-delete-plan="${plan.id}">Eliminar</button>
+          </div>
+        `;
+        planningCards.appendChild(card);
+      });
+
+      planningCards.querySelectorAll('[data-open-plan]').forEach(btn => btn.onclick = () => openPlanning(btn.dataset.openPlan));
+      planningCards.querySelectorAll('[data-edit-plan]').forEach(btn => btn.onclick = () => openPlanningModal('edit', btn.dataset.editPlan));
+      planningCards.querySelectorAll('[data-delete-plan]').forEach(btn => btn.onclick = () => deletePlanning(btn.dataset.deletePlan));
+    }
+
     function renderObjectives(){
+      const currentPlanning = getCurrentPlanning();
+      if (objectivesTitle) objectivesTitle.textContent = currentPlanning ? currentPlanning.name : 'Objetivos';
+      if (objectivesSubtitle) objectivesSubtitle.textContent = currentPlanning ? (currentPlanning.description || 'Objetivos asociados a esta planeación.') : 'Objetivos asociados a esta planeación.';
+      const planningTechCard = document.getElementById('planningTechCard');
+      if (planningTechCard) {
+        planningTechCard.innerHTML = currentPlanning ? `
+          <h3>Ficha Técnica de Planeación</h3>
+          <div class="planning-tech-grid">
+            <div class="planning-tech-item"><div class="planning-tech-label">Mapa</div><div class="planning-tech-value">${escapeHtml(currentPlanning.map || '—')}</div></div>
+            <div class="planning-tech-item"><div class="planning-tech-label">Responsable</div><div class="planning-tech-value">${escapeHtml(currentPlanning.owner || '—')}</div></div>
+            <div class="planning-tech-item"><div class="planning-tech-label">Periodo</div><div class="planning-tech-value">${formatDate(currentPlanning.startDate)} → ${formatDate(currentPlanning.endDate)}</div></div>
+            <div class="planning-tech-item"><div class="planning-tech-label">Estatus</div><div class="planning-tech-value">${statusLabel(currentPlanning.status)}</div></div>
+          </div>
+        ` : '';
+      }
       const query = document.getElementById('searchInput').value.trim().toLowerCase();
       const status = document.getElementById('statusFilter').value;
-      const filtered = state.objectives.filter(obj => {
-        const haystack = [obj.name, obj.description, obj.leader, obj.createdBy, ...(obj.tags || []), ...(obj.areas || []), ...(obj.linkedProjects || []), ...(obj.invited || []), ...((obj.reminders || []).map(x => x.text || '')), ...((obj.checklist || []).map(x => x.text || '')), ...((obj.links || []).flatMap(x => [x.title || '', x.url || ''])), ...((obj.attachments || []).map(x => x.name || ''))].join(' ').toLowerCase();
+      const filtered = state.objectives.filter(obj => obj.planningId === state.currentPlanningId).filter(obj => {
+        const haystack = [obj.name, obj.description, obj.leader, obj.createdBy, ...(obj.tags || []), ...(obj.areas || []), ...(obj.linkedProjects || []), ...(obj.invited || []), ...((obj.reminders || []).map(x => x.text || '')), ...((obj.activities || []).flatMap(x => [x.name || '', x.owner || '', x.status || '', x.dueDate || ''])), ...((obj.checklist || []).flatMap(x => [x.text || '', x.dueDate || ''])), ...((obj.links || []).flatMap(x => [x.title || '', x.url || ''])), ...((obj.attachments || []).map(x => x.name || ''))].join(' ').toLowerCase();
         return (!query || haystack.includes(query)) && (status === 'all' || obj.status === status);
       });
 
@@ -1065,8 +1544,9 @@
         const ql = calculateQualitativeProgress(obj.activities);
         const qt = calculateQuantitativeProgress(obj.indicators);
         const tr = document.createElement('tr');
+        const isExpanded = state.expandedObjectiveIds.has(obj.id);
         tr.innerHTML = `
-          <td><a class="objective-link" data-view-id="${obj.id}">${escapeHtml(obj.name)}</a></td>
+          <td><a class="objective-link" data-toggle-objective="${obj.id}"><span class="objective-chevron">${isExpanded ? '▼' : '▶'}</span>${escapeHtml(obj.name)}</a></td>
           <td><div class="progress-bar"><div class="progress-fill" style="width:${ql}%; background:${getProgressColor(ql)};"></div></div><div class="progress-label">${ql}%</div></td>
           <td><div class="ring" style="--val:${qt}; --ring-color:${getProgressColor(qt)};"><span>${qt}%</span></div></td>
           <td>${escapeHtml(obj.leader || '—')}</td>
@@ -1081,8 +1561,50 @@
           </td>
         `;
         objectivesBody.appendChild(tr);
+
+        if (isExpanded) {
+          const cascadeTr = document.createElement('tr');
+          cascadeTr.className = 'objective-cascade-row';
+          cascadeTr.innerHTML = `
+            <td colspan="7">
+              <div class="initiative-cascade">
+                <div class="initiative-cascade-head">
+                  <span>Iniciativas del objetivo</span>
+                  <span class="muted">${obj.activities.length} iniciativa(s)</span>
+                </div>
+                ${obj.activities.length ? `
+                  <div class="initiative-cascade-list">
+                    ${obj.activities.map(item => `
+                      <div class="initiative-cascade-item">
+                        <div>
+                          <div class="initiative-cascade-title">${escapeHtml(item.name)}</div>
+                          <div class="initiative-cascade-meta">Responsable: ${escapeHtml(item.owner || '—')}</div>
+                        </div>
+                        <div><strong>Estatus:</strong> ${escapeHtml(item.status || '—')}</div>
+                        <div><strong>Fecha:</strong> ${formatDate(item.dueDate)}</div>
+                        <div>
+                          <div><strong>Avance:</strong> ${Number(item.progress || 0)}%</div>
+                          <div class="tiny-progress"><div style="width:${Number(item.progress || 0)}%; background:${getProgressColor(Number(item.progress || 0))};"></div></div>
+                          <div class="initiative-actions"><button class="btn-secondary small btn-tight" type="button" data-open-actions-objective="${obj.id}" data-open-actions-activity="${obj.activities.indexOf(item)}">Asignar Acción</button><span class="muted">${(item.actions || []).length} acción(es)</span></div>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : '<div class="initiative-empty">Sin iniciativas registradas para este objetivo.</div>'}
+              </div>
+            </td>
+          `;
+          objectivesBody.appendChild(cascadeTr);
+        }
       });
 
+      document.querySelectorAll('[data-toggle-objective]').forEach(btn => btn.onclick = () => {
+        const id = btn.dataset.toggleObjective;
+        if (state.expandedObjectiveIds.has(id)) state.expandedObjectiveIds.delete(id);
+        else state.expandedObjectiveIds.add(id);
+        renderObjectives();
+      });
+      document.querySelectorAll('[data-open-actions-objective]').forEach(btn => btn.onclick = () => openInitiativeActionsModal(btn.dataset.openActionsObjective, btn.dataset.openActionsActivity));
       document.querySelectorAll('[data-view-id]').forEach(btn => btn.onclick = () => openDetailModal(btn.dataset.viewId));
       document.querySelectorAll('[data-edit-id]').forEach(btn => btn.onclick = () => startEdit(btn.dataset.editId));
       document.querySelectorAll('[data-delete-id]').forEach(btn => btn.onclick = () => deleteObjective(btn.dataset.deleteId));
@@ -1165,11 +1687,13 @@
           indicator.valueHistory.unshift({ timestamp: new Date().toISOString(), value: Number(indicator.current || 0), actor });
         }
         obj.indicators[state.editingIndicatorIndex] = indicator;
-        addHistoryEntry(obj, `Indicador "${name}" editado por ${actor} el ${formatDateTime()}.`);
+        addHistoryEntry(obj, `Indicador "${name}" editado`, actor);
       } else {
-        indicator.valueHistory = [{ timestamp: new Date().toISOString(), value: Number(indicator.current || 0), actor: indicator.owner || obj.leader || 'Sistema' }];
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        indicator.valueHistory = [{ timestamp: new Date().toISOString(), value: Number(indicator.current || 0), actor }];
         obj.indicators.push(indicator);
-        addHistoryEntry(obj, `Indicador cuantitativo agregado: ${name}.`);
+        addHistoryEntry(obj, `Indicador cuantitativo agregado: ${name}`, actor);
       }
 
       persistObjectives();
@@ -1198,7 +1722,7 @@
       indicator.current = parsed;
       if (!Array.isArray(indicator.valueHistory)) indicator.valueHistory = [];
       indicator.valueHistory.unshift({ timestamp: new Date().toISOString(), value: parsed, actor });
-      addHistoryEntry(obj, `Valor actual del indicador "${indicator.name}" actualizado de ${oldValue} a ${parsed} por ${actor} el ${formatDateTime()}.`);
+      addHistoryEntry(obj, `Valor actual del indicador "${indicator.name}" actualizado de ${oldValue} a ${parsed}`, actor);
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1210,7 +1734,7 @@
       const actor = askActionUser(obj.leader);
       if (!actor) return;
       obj.indicators[indicatorIndex].hidden = true;
-      addHistoryEntry(obj, `Indicador "${obj.indicators[indicatorIndex].name}" ocultado por ${actor} el ${formatDateTime()}.`);
+      addHistoryEntry(obj, `Indicador "${obj.indicators[indicatorIndex].name}" ocultado`, actor);
       state.detailIndicatorView = 'active';
       persistObjectives();
       renderDetailModal();
@@ -1223,7 +1747,7 @@
       const actor = askActionUser(obj.leader);
       if (!actor) return;
       obj.indicators[indicatorIndex].hidden = false;
-      addHistoryEntry(obj, `Indicador "${obj.indicators[indicatorIndex].name}" recuperado por ${actor} el ${formatDateTime()}.`);
+      addHistoryEntry(obj, `Indicador "${obj.indicators[indicatorIndex].name}" recuperado`, actor);
       state.detailIndicatorView = 'active';
       persistObjectives();
       renderDetailModal();
@@ -1281,7 +1805,7 @@
       const actor = askActionUser(obj.leader);
       if (!actor) return;
       indicator.metaPlan = collectMetaPlanRows();
-      addHistoryEntry(obj, `Planeación de metas del indicador "${indicator.name}" actualizada por ${actor} el ${formatDateTime()}.`);
+      addHistoryEntry(obj, `Planeación de metas del indicador "${indicator.name}" actualizada`, actor);
       persistObjectives();
       closeMetaPlanModal();
       renderDetailModal();
@@ -1295,9 +1819,9 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (obj?.leader) document.getElementById('modalActivityOwner').value = obj.leader;
       document.getElementById('modalActivityStatus').value = 'en progreso';
-      document.getElementById('activityModalTitle').textContent = 'Nueva Actividad';
-      document.getElementById('activityModalSubtitle').textContent = 'Agrega o edita una actividad desde la tarjeta del objetivo.';
-      document.getElementById('saveActivityBtnLabel').textContent = 'Guardar Actividad';
+      document.getElementById('activityModalTitle').textContent = 'Nueva Iniciativa';
+      document.getElementById('activityModalSubtitle').textContent = 'Agrega o edita una iniciativa desde la tarjeta del objetivo.';
+      document.getElementById('saveActivityBtnLabel').textContent = 'Guardar Iniciativa';
     }
 
     function openActivityModal(mode = 'create', activityIndex = null){
@@ -1307,9 +1831,9 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (mode === 'edit' && obj && activityIndex !== null && obj.activities[activityIndex]) {
         const activity = obj.activities[activityIndex];
-        document.getElementById('activityModalTitle').textContent = 'Editar Actividad';
-        document.getElementById('activityModalSubtitle').textContent = 'Actualiza la información de la actividad seleccionada.';
-        document.getElementById('saveActivityBtnLabel').textContent = 'Actualizar Actividad';
+        document.getElementById('activityModalTitle').textContent = 'Editar Iniciativa';
+        document.getElementById('activityModalSubtitle').textContent = 'Actualiza la información de la iniciativa seleccionada.';
+        document.getElementById('saveActivityBtnLabel').textContent = 'Actualizar Iniciativa';
         document.getElementById('modalActivityName').value = activity.name || '';
         document.getElementById('modalActivityOwner').value = activity.owner || '';
         document.getElementById('modalActivityDate').value = activity.dueDate || '';
@@ -1331,7 +1855,7 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj) return;
       const name = document.getElementById('modalActivityName').value.trim();
-      if (!name) return alert('Escribe el nombre de la actividad.');
+      if (!name) return alert('Escribe el nombre de la iniciativa.');
       const actor = askActionUser(obj.leader);
       if (!actor) return;
 
@@ -1340,21 +1864,149 @@
         owner: document.getElementById('modalActivityOwner').value.trim(),
         dueDate: document.getElementById('modalActivityDate').value,
         status: document.getElementById('modalActivityStatus').value,
-        progress: Number(document.getElementById('modalActivityProgress').value || 0)
+        progress: Number(document.getElementById('modalActivityProgress').value || 0),
+        actions: []
       };
 
       if (state.activityModalMode === 'edit' && state.editingActivityIndex !== null && obj.activities[state.editingActivityIndex]) {
+        activity.actions = Array.isArray(obj.activities[state.editingActivityIndex].actions) ? obj.activities[state.editingActivityIndex].actions : [];
         obj.activities[state.editingActivityIndex] = activity;
-        addHistoryEntry(obj, `Actividad "${activity.name}" actualizada por ${actor} el ${formatDateTime()}.`);
+        addHistoryEntry(obj, `Iniciativa "${activity.name}" actualizada`, actor);
       } else {
         obj.activities.push(activity);
-        addHistoryEntry(obj, `Actividad "${activity.name}" agregada por ${actor} el ${formatDateTime()}.`);
+        addHistoryEntry(obj, `Iniciativa "${activity.name}" agregada`, actor);
       }
 
       persistObjectives();
       closeActivityModal();
       renderDetailModal();
       renderObjectives();
+    }
+
+
+    function getActionContext(){
+      const obj = state.objectives.find(item => item.id === (state.actionObjectiveId || state.detailId));
+      const activity = obj?.activities?.[state.actionActivityIndex];
+      return { obj, activity };
+    }
+
+    function openInitiativeActionsModal(objectiveId, activityIndex){
+      state.actionObjectiveId = objectiveId || state.detailId;
+      state.actionActivityIndex = Number(activityIndex);
+      state.editingActionIndex = null;
+      renderInitiativeActionsModal();
+      initiativeActionsModal.classList.add('open');
+      initiativeActionsModal.setAttribute('aria-hidden','false');
+    }
+
+    function closeInitiativeActionsModal(){
+      initiativeActionsModal.classList.remove('open');
+      initiativeActionsModal.setAttribute('aria-hidden','true');
+    }
+
+    function renderInitiativeActionsModal(){
+      const { obj, activity } = getActionContext();
+      document.getElementById('initiativeActionsTitle').textContent = activity ? `Acciones · ${activity.name}` : 'Acciones de la Iniciativa';
+      document.getElementById('initiativeActionsSubtitle').textContent = obj ? `Objetivo: ${obj.name}` : 'Listado de acciones asignadas.';
+      const actions = Array.isArray(activity?.actions) ? activity.actions : [];
+      initiativeActionsContent.innerHTML = actions.length ? actions.map((action, index) => `
+        <div class="action-row">
+          <div><div class="action-title">${escapeHtml(action.title || 'Sin título')}</div><div class="mini-item-sub">${escapeHtml(action.detail || 'Sin detalle')}</div></div>
+          <div><strong>Responsable:</strong> ${escapeHtml(action.responsible || '—')}</div>
+          <div><strong>Fecha compromiso:</strong> ${formatDate(action.dueDate)}</div>
+          <div class="actions-inline"><button class="btn-secondary small" type="button" data-open-action-detail="${index}">Detalle</button></div>
+        </div>
+      `).join('') : '<div class="simple-card muted">Sin acciones asignadas. Usa “Nueva Acción” para crear la primera.</div>';
+      initiativeActionsContent.querySelectorAll('[data-open-action-detail]').forEach(btn => btn.onclick = () => openActionDetailModal(Number(btn.dataset.openActionDetail)));
+    }
+
+    function resetActionDetailForm(){
+      ['actionTitleInput','actionDetailInput','actionCreatedByInput','actionResponsibleInput','actionInvitedInput','actionStartInput','actionDueInput','actionSpentInput','actionBudgetInput','actionTimeInput','actionRemindersInput','actionTagsInput','actionChecklistInput','actionLinksInput','actionCommentInput'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      document.getElementById('actionStatusInput').value = 'Por hacer';
+      const fileInput = document.getElementById('actionAttachmentsInput');
+      if (fileInput) fileInput.value = '';
+    }
+
+    function openActionDetailModal(actionIndex = null){
+      const { obj, activity } = getActionContext();
+      if (!obj || !activity) return;
+      resetActionDetailForm();
+      state.editingActionIndex = actionIndex;
+      const action = actionIndex === null ? null : activity.actions?.[actionIndex];
+      document.getElementById('actionDetailTitle').textContent = action ? 'Detalle de Acción' : 'Nueva Acción';
+      document.getElementById('actionDetailSubtitle').textContent = `Iniciativa: ${activity.name}`;
+      document.getElementById('actionCreatedByInput').value = action?.createdBy || obj.leader || '';
+      document.getElementById('actionResponsibleInput').value = action?.responsible || activity.owner || obj.leader || '';
+      if (action) {
+        document.getElementById('actionTitleInput').value = action.title || '';
+        document.getElementById('actionDetailInput').value = action.detail || '';
+        document.getElementById('actionStatusInput').value = action.status || 'Por hacer';
+        document.getElementById('actionInvitedInput').value = (action.invited || []).join(', ');
+        document.getElementById('actionStartInput').value = action.startDate || '';
+        document.getElementById('actionDueInput').value = action.dueDate || '';
+        document.getElementById('actionSpentInput').value = action.spent || '';
+        document.getElementById('actionBudgetInput').value = action.budget || '';
+        document.getElementById('actionTimeInput').value = action.timeInvested || '';
+        document.getElementById('actionRemindersInput').value = (action.reminders || []).join(', ');
+        document.getElementById('actionTagsInput').value = (action.tags || []).join(', ');
+        document.getElementById('actionChecklistInput').value = (action.checklist || []).join('\n');
+        document.getElementById('actionLinksInput').value = (action.links || []).join('\n');
+        document.getElementById('actionCommentInput').value = action.comment || '';
+      }
+      actionDetailModal.classList.add('open');
+      actionDetailModal.setAttribute('aria-hidden','false');
+      document.getElementById('actionTitleInput').focus();
+    }
+
+    function closeActionDetailModal(){
+      actionDetailModal.classList.remove('open');
+      actionDetailModal.setAttribute('aria-hidden','true');
+      state.editingActionIndex = null;
+    }
+
+    function splitComma(value){ return String(value || '').split(',').map(x => x.trim()).filter(Boolean); }
+    function splitLines(value){ return String(value || '').split(/\n+/).map(x => x.trim()).filter(Boolean); }
+
+    function saveActionDetail(){
+      const { obj, activity } = getActionContext();
+      if (!obj || !activity) return;
+      const title = document.getElementById('actionTitleInput').value.trim();
+      if (!title) return alert('Escribe el título de la acción.');
+      const actor = askActionUser(obj.leader);
+      if (!actor) return;
+      const files = Array.from(document.getElementById('actionAttachmentsInput').files || []).map(file => ({ name: file.name, size: file.size, type: file.type || '', addedAt: new Date().toISOString() }));
+      const previous = state.editingActionIndex === null ? null : activity.actions?.[state.editingActionIndex];
+      const action = normalizeInitiativeAction({
+        id: previous?.id,
+        title,
+        responsible: document.getElementById('actionResponsibleInput').value.trim(),
+        dueDate: document.getElementById('actionDueInput').value,
+        detail: document.getElementById('actionDetailInput').value.trim(),
+        status: document.getElementById('actionStatusInput').value,
+        createdBy: document.getElementById('actionCreatedByInput').value.trim() || actor,
+        invited: splitComma(document.getElementById('actionInvitedInput').value),
+        startDate: document.getElementById('actionStartInput').value,
+        spent: Number(document.getElementById('actionSpentInput').value || 0),
+        budget: Number(document.getElementById('actionBudgetInput').value || 0),
+        timeInvested: document.getElementById('actionTimeInput').value.trim(),
+        reminders: splitComma(document.getElementById('actionRemindersInput').value),
+        tags: splitComma(document.getElementById('actionTagsInput').value),
+        checklist: splitLines(document.getElementById('actionChecklistInput').value),
+        links: splitLines(document.getElementById('actionLinksInput').value),
+        attachments: [...(previous?.attachments || []), ...files],
+        comment: document.getElementById('actionCommentInput').value.trim(),
+        history: previous?.history || []
+      });
+      action.history.unshift(buildHistoryMessage(previous ? 'Acción actualizada' : 'Acción creada', actor));
+      if (!Array.isArray(activity.actions)) activity.actions = [];
+      if (previous) activity.actions[state.editingActionIndex] = action;
+      else activity.actions.push(action);
+      addHistoryEntry(obj, `${previous ? 'Acción actualizada' : 'Acción asignada'} en iniciativa "${activity.name}": ${title}`, actor);
+      persistObjectives();
+      closeActionDetailModal();
+      renderInitiativeActionsModal();
+      renderObjectives();
+      if (state.detailId) renderDetailModal();
     }
 
     function openDetailModal(id){
@@ -1512,7 +2164,7 @@
 
                 <div class="tab-pane ${state.detailTab === 'history' ? 'active' : ''}">
                   <div class="history-list">
-                    ${obj.history.length ? obj.history.map(item => `<div class="history-card">${escapeHtml(item)}</div>`).join('') : '<div class="simple-card muted">Sin historial registrado.</div>'}
+                    ${obj.history.length ? obj.history.map(item => `<div class="history-card">${renderHistoryEntry(escapeHtml(item))}</div>`).join('') : '<div class="simple-card muted">Sin historial registrado.</div>'}
                   </div>
                 </div>
               </div>
@@ -1521,11 +2173,11 @@
             <div class="detail-right">
               <div class="detail-panel">
                 <div class="right-section-title">
-                  <h3 style="margin:0">Agrega Actividades</h3>
+                  <h3 style="margin:0">Iniciativas</h3>
                   <button class="btn-secondary small" type="button" id="detailAddActivityBtn">Agregar +</button>
                 </div>
                 <div class="activity-list-scroll">
-                  ${obj.activities.length ? obj.activities.map((item, index) => `<div class="activity-card"><div class="head"><span>${escapeHtml(item.name)}</span><div class="activity-header-right"><span>${Number(item.progress || 0)}%</span><button class="btn-secondary small btn-tight" type="button" data-edit-activity-index="${index}">Editar</button></div></div><div class="tiny-progress"><div style="width:${Number(item.progress || 0)}%; background:${getProgressColor(Number(item.progress || 0))};"></div></div><div class="activity-meta"><div><strong>Responsable:</strong> ${escapeHtml(item.owner || '—')}</div><div><strong>Estatus:</strong> ${escapeHtml(item.status || '—')}</div><div><strong>Fecha:</strong> ${formatDate(item.dueDate)}</div></div></div>`).join('') : '<div class="simple-card muted">Sin actividades registradas.</div>'}
+                  ${obj.activities.length ? obj.activities.map((item, index) => `<div class="activity-card"><div class="head"><span>${escapeHtml(item.name)}</span><div class="activity-header-right"><span>${Number(item.progress || 0)}%</span><button class="btn-secondary small btn-tight" type="button" data-edit-activity-index="${index}">Editar</button></div></div><div class="tiny-progress"><div style="width:${Number(item.progress || 0)}%; background:${getProgressColor(Number(item.progress || 0))};"></div></div><div class="activity-meta"><div><strong>Responsable:</strong> ${escapeHtml(item.owner || '—')}</div><div><strong>Estatus:</strong> ${escapeHtml(item.status || '—')}</div><div><strong>Fecha:</strong> ${formatDate(item.dueDate)}</div><div class="initiative-actions"><button class="btn-secondary small btn-tight" type="button" data-open-actions-detail-index="${index}">Asignar Acción</button><span>${(item.actions || []).length} acción(es)</span></div></div></div>`).join('') : '<div class="simple-card muted">Sin iniciativas registradas.</div>'}
                 </div>
               </div>
 
@@ -1535,11 +2187,14 @@
                   <button class="btn-secondary small" type="button" id="toggleReminderBoxBtn">Agregar</button>
                 </div>
                 <div class="section-mini-list">
-                  ${obj.reminders.length ? obj.reminders.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.text)}</span><button class="btn-light small btn-tight" type="button" data-remove-reminder-index="${index}">Quitar</button></div><div class="mini-item-sub">${item.dueDate ? `Fecha: ${formatDate(item.dueDate)}` : 'Sin fecha'}</div></div>`).join('') : '<div class="muted">No hay recordatorios</div>'}
+                  ${obj.reminders.length ? obj.reminders.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.text)}</span><button class="btn-light small btn-tight" type="button" data-remove-reminder-index="${index}">Quitar</button></div><div class="mini-item-sub">${item.dueDate ? `Fecha: ${formatDate(item.dueDate)}` : 'Sin fecha'}${item.dueTime ? ` · Hora: ${formatTime(item.dueTime)}` : ''}</div></div>`).join('') : '<div class="muted">No hay recordatorios</div>'}
                 </div>
                 <div class="inline-add stack" id="inlineReminderBox">
                   <input id="inlineReminderText" class="input" type="text" placeholder="Escribe un recordatorio" />
-                  <input id="inlineReminderDate" class="input" type="date" />
+                  <div class="grid-2">
+                    <input id="inlineReminderDate" class="input" type="date" />
+                    <input id="inlineReminderTime" class="input" type="time" />
+                  </div>
                   <button class="btn-secondary" type="button" id="saveInlineReminderBtn">Agregar</button>
                 </div>
               </div>
@@ -1564,10 +2219,11 @@
                   <button class="btn-secondary small" type="button" id="toggleChecklistBoxBtn">Agregar</button>
                 </div>
                 <div>
-                  ${obj.checklist.length ? obj.checklist.map((item, index) => `<div class="check-row ${item.done ? 'done' : ''}"><input type="checkbox" ${item.done ? 'checked' : ''} data-toggle-check-index="${index}" /><span class="check-label">${escapeHtml(item.text)}</span><button class="btn-light small btn-tight" type="button" data-remove-check-index="${index}">Quitar</button></div>`).join('') : '<div class="muted">Sin elementos en check list</div>'}
+                  ${obj.checklist.length ? `<div class="check-header"><span></span><span>Punto</span><span>Fecha compromiso</span><span></span></div>` + obj.checklist.map((item, index) => `<div class="check-row ${item.done ? 'done' : ''}"><input type="checkbox" ${item.done ? 'checked' : ''} data-toggle-check-index="${index}" /><input class="input check-edit-text" type="text" value="${escapeHtml(item.text)}" data-edit-check-text="${index}" /><input class="input check-edit-date" type="date" value="${escapeHtml(item.dueDate || '')}" data-edit-check-date="${index}" /><button class="btn-light small btn-tight" type="button" data-remove-check-index="${index}">Quitar</button></div>`).join('') : '<div class="muted">Sin elementos en check list</div>'}
                 </div>
                 <div class="inline-add stack" id="inlineChecklistBox">
                   <input id="inlineChecklistText" class="input" type="text" placeholder="Nuevo elemento" />
+                  <input id="inlineChecklistDate" class="input" type="date" />
                   <button class="btn-secondary" type="button" id="saveInlineChecklistBtn">Agregar</button>
                 </div>
               </div>
@@ -1589,29 +2245,43 @@
 
               <div class="detail-panel">
                 <div class="right-section-title">
+                  <h3 style="margin:0">Áreas</h3>
+                  <div class="tag-tools"><button class="icon-btn plus-mini" type="button" id="toggleInlineAreaBtn">+</button></div>
+                </div>
+                <div class="chips">${obj.areas.length ? obj.areas.map((area, index) => `<span class="tag">${escapeHtml(area)} <button type="button" data-remove-area-index="${index}">×</button></span>`).join('') : '<span class="muted">Sin registros.</span>'}</div>
+                <div class="inline-add" id="inlineAreaBox">
+                  <input id="inlineAreaInput" class="input" type="text" placeholder="Nueva área" />
+                  <button class="btn-secondary" type="button" id="saveInlineAreaBtn">Agregar</button>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="right-section-title">
+                  <h3 style="margin:0">Ligado a</h3>
+                  <div class="tag-tools"><button class="icon-btn plus-mini" type="button" id="toggleInlineProjectBtn">+</button></div>
+                </div>
+                <div class="chips">${obj.linkedProjects.length ? obj.linkedProjects.map((project, index) => `<span class="tag">${escapeHtml(project)} <button type="button" data-remove-project-index="${index}">×</button></span>`).join('') : '<span class="muted">Sin proyectos ligados.</span>'}</div>
+                <div class="inline-add" id="inlineProjectBox">
+                  <input id="inlineProjectInput" class="input" type="text" placeholder="Nuevo proyecto ligado" />
+                  <button class="btn-secondary" type="button" id="saveInlineProjectBtn">Agregar</button>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="right-section-title">
                   <h3 style="margin:0">Archivos Adjuntos</h3>
                   <button class="btn-secondary small" type="button" id="toggleAttachmentBoxBtn">Adjuntar archivos</button>
                 </div>
                 <div class="section-mini-list">
-                  ${obj.attachments.length ? obj.attachments.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.name)}</span><button class="btn-light small btn-tight" type="button" data-remove-attachment-index="${index}">Quitar</button></div><div class="mini-item-sub">${formatFileSize(item.size)} · ${formatDateTime(item.addedAt)}</div></div>`).join('') : '<div class="muted">Sin archivos adjuntos</div>'}
+                  ${obj.attachments.length ? obj.attachments.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.name)}</span><div class="mini-item-actions">${item.dataUrl ? `<a class="btn-secondary small btn-tight attachment-anchor-btn" href="${item.dataUrl}" target="_blank" rel="noopener noreferrer">Ver</a><a class="btn-light small btn-tight attachment-anchor-btn" href="${item.dataUrl}" download="${escapeHtml(item.name)}">Descargar</a>` : ''}<button class="btn-light small btn-tight" type="button" data-remove-attachment-index="${index}">Quitar</button></div></div><div class="mini-item-sub">${formatFileSize(item.size)} · ${formatDateTime(item.addedAt)}</div></div>`).join('') : '<div class="muted">Sin archivos adjuntos</div>'}
                 </div>
                 <div class="inline-add stack" id="inlineAttachmentBox">
                   <div class="file-upload-wrap">
                     <input id="inlineAttachmentInput" type="file" multiple />
                     <button class="btn-secondary" type="button" id="saveInlineAttachmentBtn">Registrar</button>
                   </div>
-                  <div class="modal-mini-subnote">Se guardará el registro del archivo (nombre, tamaño y fecha) en esta demo local.</div>
+                  <div class="modal-mini-subnote">En esta demo local se guarda el archivo en el navegador para poder visualizarlo y descargarlo.</div>
                 </div>
-              </div>
-
-              <div class="detail-panel">
-                <h3>Áreas</h3>
-                ${obj.areas.length ? `<div class="chips">${obj.areas.map(area => `<span class="tag">${escapeHtml(area)}</span>`).join('')}</div>` : '<div class="muted">Sin registros.</div>'}
-              </div>
-
-              <div class="detail-panel">
-                <h3>Ligado a</h3>
-                ${obj.linkedProjects.length ? `<div class="chips">${obj.linkedProjects.map(project => `<span class="tag">${escapeHtml(project)}</span>`).join('')}</div>` : '<div class="muted">Sin proyectos ligados.</div>'}
               </div>
             </div>
           </div>
@@ -1675,6 +2345,10 @@
         btn.onclick = () => openActivityModal('edit', Number(btn.dataset.editActivityIndex));
       });
 
+      detailContent.querySelectorAll('[data-open-actions-detail-index]').forEach(btn => {
+        btn.onclick = () => openInitiativeActionsModal(obj.id, Number(btn.dataset.openActionsDetailIndex));
+      });
+
       const addCommentBtn = document.getElementById('addCommentBtn');
       if (addCommentBtn) addCommentBtn.onclick = addCommentFromDetail;
       const toggleInlineTagBtn = document.getElementById('toggleInlineTagBtn');
@@ -1684,6 +2358,22 @@
       const inlineTagInput = document.getElementById('inlineTagInput');
       if (inlineTagInput) inlineTagInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addInlineTagToDetail(); } });
       detailContent.querySelectorAll('[data-remove-detail-tag]').forEach(btn => btn.onclick = () => removeDetailTag(Number(btn.dataset.removeDetailTag)));
+
+      const toggleInlineAreaBtn = document.getElementById('toggleInlineAreaBtn');
+      if (toggleInlineAreaBtn) toggleInlineAreaBtn.onclick = () => { const box = document.getElementById('inlineAreaBox'); box.classList.toggle('open'); if (box.classList.contains('open')) document.getElementById('inlineAreaInput').focus(); };
+      const saveInlineAreaBtn = document.getElementById('saveInlineAreaBtn');
+      if (saveInlineAreaBtn) saveInlineAreaBtn.onclick = addAreaFromDetail;
+      const inlineAreaInput = document.getElementById('inlineAreaInput');
+      if (inlineAreaInput) inlineAreaInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addAreaFromDetail(); } });
+      detailContent.querySelectorAll('[data-remove-area-index]').forEach(btn => btn.onclick = () => removeAreaFromDetail(Number(btn.dataset.removeAreaIndex)));
+
+      const toggleInlineProjectBtn = document.getElementById('toggleInlineProjectBtn');
+      if (toggleInlineProjectBtn) toggleInlineProjectBtn.onclick = () => { const box = document.getElementById('inlineProjectBox'); box.classList.toggle('open'); if (box.classList.contains('open')) document.getElementById('inlineProjectInput').focus(); };
+      const saveInlineProjectBtn = document.getElementById('saveInlineProjectBtn');
+      if (saveInlineProjectBtn) saveInlineProjectBtn.onclick = addProjectFromDetail;
+      const inlineProjectInput = document.getElementById('inlineProjectInput');
+      if (inlineProjectInput) inlineProjectInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addProjectFromDetail(); } });
+      detailContent.querySelectorAll('[data-remove-project-index]').forEach(btn => btn.onclick = () => removeProjectFromDetail(Number(btn.dataset.removeProjectIndex)));
 
       const toggleReminderBoxBtn = document.getElementById('toggleReminderBoxBtn');
       if (toggleReminderBoxBtn) toggleReminderBoxBtn.onclick = () => { const box = document.getElementById('inlineReminderBox'); box.classList.toggle('open'); if (box.classList.contains('open')) document.getElementById('inlineReminderText').focus(); };
@@ -1700,6 +2390,13 @@
       const inlineChecklistText = document.getElementById('inlineChecklistText');
       if (inlineChecklistText) inlineChecklistText.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addChecklistItemFromDetail(); } });
       detailContent.querySelectorAll('[data-toggle-check-index]').forEach(input => input.onchange = () => toggleChecklistItem(Number(input.dataset.toggleCheckIndex), input.checked));
+      detailContent.querySelectorAll('[data-edit-check-text]').forEach(input => {
+        input.addEventListener('change', () => editChecklistItemText(Number(input.dataset.editCheckText), input.value));
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } });
+      });
+      detailContent.querySelectorAll('[data-edit-check-date]').forEach(input => {
+        input.addEventListener('change', () => editChecklistItemDate(Number(input.dataset.editCheckDate), input.value));
+      });
       detailContent.querySelectorAll('[data-remove-check-index]').forEach(btn => btn.onclick = () => removeChecklistItem(Number(btn.dataset.removeCheckIndex)));
 
       const toggleLinkBoxBtn = document.getElementById('toggleLinkBoxBtn');
@@ -1772,7 +2469,7 @@
       const text = document.getElementById('newCommentText').value.trim();
       if (!text) return alert('Escribe un comentario.');
       obj.comments.unshift({ author, text, date: new Date().toISOString().slice(0,10) });
-      obj.history.unshift(`Comentario agregado por ${author} el ${new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(new Date())}.`);
+      addHistoryEntry(obj, 'Comentario agregado', author);
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1786,7 +2483,9 @@
       if (!value) return;
       if (!obj.tags.includes(value)){
         obj.tags.push(value);
-        obj.history.unshift(`Etiqueta agregada: ${value}.`);
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Etiqueta agregada: ${value}`, actor);
         persistObjectives();
         renderDetailModal();
         renderObjectives();
@@ -1799,7 +2498,77 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj) return;
       const removed = obj.tags.splice(index, 1)[0];
-      if (removed) obj.history.unshift(`Etiqueta eliminada: ${removed}.`);
+      if (removed) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Etiqueta eliminada: ${removed}`, actor);
+      }
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function addAreaFromDetail(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const input = document.getElementById('inlineAreaInput');
+      const value = input.value.trim();
+      if (!value) return;
+      if (!obj.areas.includes(value)) {
+        obj.areas.push(value);
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Área agregada: ${value}`, actor);
+        persistObjectives();
+        renderDetailModal();
+        renderObjectives();
+      } else {
+        input.value = '';
+      }
+    }
+
+    function removeAreaFromDetail(index){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const removed = obj.areas.splice(index, 1)[0];
+      if (removed) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Área eliminada: ${removed}`, actor);
+      }
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function addProjectFromDetail(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const input = document.getElementById('inlineProjectInput');
+      const value = input.value.trim();
+      if (!value) return;
+      if (!obj.linkedProjects.includes(value)) {
+        obj.linkedProjects.push(value);
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Proyecto ligado agregado: ${value}`, actor);
+        persistObjectives();
+        renderDetailModal();
+        renderObjectives();
+      } else {
+        input.value = '';
+      }
+    }
+
+    function removeProjectFromDetail(index){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const removed = obj.linkedProjects.splice(index, 1)[0];
+      if (removed) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Proyecto ligado eliminado: ${removed}`, actor);
+      }
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1810,9 +2579,12 @@
       if (!obj) return;
       const textValue = document.getElementById('inlineReminderText').value.trim();
       const dueDate = document.getElementById('inlineReminderDate').value;
+      const dueTime = document.getElementById('inlineReminderTime').value;
       if (!textValue) return alert('Escribe un recordatorio.');
-      obj.reminders.push({ text: textValue, dueDate });
-      obj.history.unshift(`Recordatorio agregado: ${textValue}.`);
+      obj.reminders.push({ text: textValue, dueDate, dueTime });
+      const actor = askActionUser(obj.leader);
+      if (!actor) return;
+      addHistoryEntry(obj, `Recordatorio agregado: ${textValue}${dueDate ? ` para ${dueDate}` : ''}${dueTime ? ` a las ${dueTime}` : ''}`, actor);
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1822,7 +2594,11 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj) return;
       const removed = obj.reminders.splice(index, 1)[0];
-      if (removed) obj.history.unshift(`Recordatorio eliminado: ${removed.text}.`);
+      if (removed) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Recordatorio eliminado: ${removed.text}`, actor);
+      }
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1832,9 +2608,12 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj) return;
       const textValue = document.getElementById('inlineChecklistText').value.trim();
+      const dueDate = document.getElementById('inlineChecklistDate').value;
       if (!textValue) return alert('Escribe un elemento del check list.');
-      obj.checklist.push({ text: textValue, done: false });
-      obj.history.unshift(`Elemento agregado a check list: ${textValue}.`);
+      obj.checklist.push({ text: textValue, dueDate, done: false });
+      const actor = askActionUser(obj.leader);
+      if (!actor) return;
+      addHistoryEntry(obj, `Elemento agregado a check list: ${textValue}${dueDate ? ` · compromiso ${dueDate}` : ''}`, actor);
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1844,7 +2623,45 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj || !obj.checklist[index]) return;
       obj.checklist[index].done = Boolean(checked);
-      obj.history.unshift(`Check list ${checked ? 'completado' : 'reabierto'}: ${obj.checklist[index].text}.`);
+      const actor = askActionUser(obj.leader);
+      if (!actor) { renderDetailModal(); return; }
+      addHistoryEntry(obj, `Check list ${checked ? 'completado' : 'reabierto'}: ${obj.checklist[index].text}`, actor);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function editChecklistItemText(index, value){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj || !obj.checklist[index]) return;
+      const textValue = String(value || '').trim();
+      if (!textValue) {
+        alert('El punto del check list no puede quedar vacío.');
+        renderDetailModal();
+        return;
+      }
+      const previous = obj.checklist[index].text;
+      obj.checklist[index].text = textValue;
+      if (previous !== textValue) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) { renderDetailModal(); return; }
+        addHistoryEntry(obj, `Check list editado: ${previous} → ${textValue}`, actor);
+      }
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function editChecklistItemDate(index, value){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj || !obj.checklist[index]) return;
+      const previous = obj.checklist[index].dueDate || '';
+      obj.checklist[index].dueDate = value || '';
+      if (previous !== obj.checklist[index].dueDate) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) { renderDetailModal(); return; }
+        addHistoryEntry(obj, `Fecha compromiso del check list actualizada: ${obj.checklist[index].text}${value ? ` · ${value}` : ''}`, actor);
+      }
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1854,7 +2671,11 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj) return;
       const removed = obj.checklist.splice(index, 1)[0];
-      if (removed) obj.history.unshift(`Elemento eliminado de check list: ${removed.text}.`);
+      if (removed) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Elemento eliminado de check list: ${removed.text}`, actor);
+      }
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1867,7 +2688,9 @@
       const url = document.getElementById('inlineLinkUrl').value.trim();
       if (!title && !url) return alert('Agrega un nombre o una URL.');
       obj.links.push({ title: title || url, url });
-      obj.history.unshift(`Enlace agregado: ${title || url}.`);
+      const actor = askActionUser(obj.leader);
+      if (!actor) return;
+      addHistoryEntry(obj, `Enlace agregado: ${title || url}`, actor);
       persistObjectives();
       renderDetailModal();
       renderObjectives();
@@ -1877,38 +2700,68 @@
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj) return;
       const removed = obj.links.splice(index, 1)[0];
-      if (removed) obj.history.unshift(`Enlace eliminado: ${removed.title || removed.url}.`);
+      if (removed) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Enlace eliminado: ${removed.title || removed.url}`, actor);
+      }
       persistObjectives();
       renderDetailModal();
       renderObjectives();
     }
 
-    function addAttachmentsFromDetail(){
+    async function addAttachmentsFromDetail(){
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj) return;
       const input = document.getElementById('inlineAttachmentInput');
       const files = Array.from(input.files || []);
       if (!files.length) return alert('Selecciona al menos un archivo.');
-      files.forEach(file => {
-        obj.attachments.push({ name: file.name, size: file.size, addedAt: new Date().toISOString() });
-      });
-      obj.history.unshift(`${files.length} archivo(s) adjuntos registrados.`);
-      persistObjectives();
-      renderDetailModal();
-      renderObjectives();
+      try {
+        const processed = await Promise.all(files.map(async (file) => ({
+          name: file.name,
+          size: file.size,
+          type: file.type || '',
+          dataUrl: await readFileAsDataUrl(file),
+          addedAt: new Date().toISOString()
+        })));
+        processed.forEach(item => obj.attachments.push(item));
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `${files.length} archivo(s) adjuntos registrados`, actor);
+        persistObjectives();
+        renderDetailModal();
+        renderObjectives();
+      } catch (error) {
+        alert('No se pudo registrar uno o más archivos.');
+      }
     }
 
     function removeAttachmentFromDetail(index){
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj) return;
       const removed = obj.attachments.splice(index, 1)[0];
-      if (removed) obj.history.unshift(`Archivo adjunto eliminado: ${removed.name}.`);
+      if (removed) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        addHistoryEntry(obj, `Archivo adjunto eliminado: ${removed.name}`, actor);
+      }
       persistObjectives();
       renderDetailModal();
       renderObjectives();
     }
 
+    document.getElementById('openPlanningFormBtn').addEventListener('click', () => openPlanningModal('create'));
+    document.getElementById('closePlanningBtn').addEventListener('click', closePlanningModal);
+    document.getElementById('savePlanningBtn').addEventListener('click', savePlanning);
+    document.getElementById('backToPlanningsBtn').addEventListener('click', showPlanningView);
+    document.getElementById('planningSearchInput').addEventListener('input', renderPlannings);
+    document.getElementById('planningStatusFilter').addEventListener('change', renderPlannings);
+
     document.getElementById('openFormBtn').addEventListener('click', () => { resetForm(); openFormModal(); });
+    document.getElementById('openKpiBoardBtn').addEventListener('click', () => {
+      if (!state.currentPlanningId) return alert('Selecciona una planeación.');
+      window.location.href = `tablero_kpis.html?planningId=${encodeURIComponent(state.currentPlanningId)}`;
+    });
     document.getElementById('closeFormBtn').addEventListener('click', () => { closeFormModal(); resetForm(); });
     document.getElementById('saveObjectiveBtn').addEventListener('click', saveObjective);
     document.getElementById('addIndicatorBtn').addEventListener('click', () => addIndicatorRow());
@@ -1922,18 +2775,25 @@
     document.getElementById('addMetaPlanRowBtn').addEventListener('click', () => addMetaPlanRow());
     document.getElementById('closeActivityBtn').addEventListener('click', closeActivityModal);
     document.getElementById('saveActivityBtn').addEventListener('click', saveActivityFromModal);
+    document.getElementById('closeInitiativeActionsBtn').addEventListener('click', closeInitiativeActionsModal);
+    document.getElementById('newActionBtn').addEventListener('click', () => openActionDetailModal(null));
+    document.getElementById('closeActionDetailBtn').addEventListener('click', closeActionDetailModal);
+    document.getElementById('saveActionDetailBtn').addEventListener('click', saveActionDetail);
     document.getElementById('tagInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addFormTag(); } });
     document.getElementById('searchInput').addEventListener('input', renderObjectives);
     document.getElementById('statusFilter').addEventListener('change', renderObjectives);
 
-    [formModal, detailModal, indicatorModal, valueHistoryModal, metaPlanModal, activityModal].forEach(modal => modal.addEventListener('click', (e) => {
+    [planningModal, formModal, detailModal, indicatorModal, valueHistoryModal, metaPlanModal, activityModal].forEach(modal => modal.addEventListener('click', (e) => {
       if (e.target === modal){
+        if (modal === planningModal) closePlanningModal();
         if (modal === formModal){ closeFormModal(); resetForm(); }
         if (modal === detailModal) closeDetailModal();
         if (modal === indicatorModal) closeIndicatorModal();
         if (modal === valueHistoryModal) closeValueHistoryModal();
         if (modal === metaPlanModal) closeMetaPlanModal();
         if (modal === activityModal) closeActivityModal();
+        if (modal === initiativeActionsModal) closeInitiativeActionsModal();
+        if (modal === actionDetailModal) closeActionDetailModal();
       }
     }));
 
@@ -1952,17 +2812,20 @@
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape'){
+        closePlanningModal();
         closeFormModal();
         closeDetailModal();
         closeIndicatorModal();
         closeValueHistoryModal();
         closeMetaPlanModal();
         closeActivityModal();
+        closeInitiativeActionsModal();
+        closeActionDetailModal();
       }
     });
 
     resetForm();
-    renderObjectives();
+    renderPlannings();
   </script>
 </body>
 </html>
