@@ -274,6 +274,7 @@
         </div>
         <div class="modal-actions">
           <button id="openKpiBoardBtn" class="btn-secondary" type="button">Tablero KPI´s</button>
+          <button id="openActionsBoardBtn" class="btn-secondary" type="button">Tablero de Acciones</button>
           <button id="openFormBtn" class="btn-primary">
             <span>Nuevo Objetivo</span>
             <span class="plus">+</span>
@@ -2762,6 +2763,10 @@
       if (!state.currentPlanningId) return alert('Selecciona una planeación.');
       window.location.href = `tablero_kpis.html?planningId=${encodeURIComponent(state.currentPlanningId)}`;
     });
+    document.getElementById('openActionsBoardBtn').addEventListener('click', () => {
+      if (!state.currentPlanningId) return alert('Selecciona una planeación.');
+      window.location.href = `tablero_acciones.html?planningId=${encodeURIComponent(state.currentPlanningId)}`;
+    });
     document.getElementById('closeFormBtn').addEventListener('click', () => { closeFormModal(); resetForm(); });
     document.getElementById('saveObjectiveBtn').addEventListener('click', saveObjective);
     document.getElementById('addIndicatorBtn').addEventListener('click', () => addIndicatorRow());
@@ -2783,7 +2788,7 @@
     document.getElementById('searchInput').addEventListener('input', renderObjectives);
     document.getElementById('statusFilter').addEventListener('change', renderObjectives);
 
-    [planningModal, formModal, detailModal, indicatorModal, valueHistoryModal, metaPlanModal, activityModal].forEach(modal => modal.addEventListener('click', (e) => {
+    [planningModal, formModal, detailModal, indicatorModal, valueHistoryModal, metaPlanModal, activityModal, initiativeActionsModal, actionDetailModal].forEach(modal => modal.addEventListener('click', (e) => {
       if (e.target === modal){
         if (modal === planningModal) closePlanningModal();
         if (modal === formModal){ closeFormModal(); resetForm(); }
