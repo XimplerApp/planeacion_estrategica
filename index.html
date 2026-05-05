@@ -3,11 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ximpler - Tablero Operativo</title>
+  <title>Ximpler - Objetivos</title>
   <style>
     :root{
-      --bg:#f5f7fa;--card:#fff;--line:#e6ebf0;--line-dark:#d5dde7;--text:#243041;--muted:#6b7280;
-      --green:#22a652;--green-soft:#e8f7ee;--yellow:#d6a300;--yellow-soft:#fff6d7;--red:#dc3545;--red-soft:#fdecef;--blue:#0f5ea9;--blue-soft:#eef5ff;--shadow:0 12px 30px rgba(15,23,42,.08);--radius:14px;
+      --bg:#f5f7fa;
+      --card:#fff;
+      --line:#e6ebf0;
+      --line-dark:#d5dde7;
+      --text:#243041;
+      --muted:#6b7280;
+      --green:#22a652;
+      --green-soft:#e8f7ee;
+      --yellow:#d6a300;
+      --yellow-soft:#fff6d7;
+      --red:#dc3545;
+      --red-soft:#fdecef;
+      --blue:#0f5ea9;
+      --blue-soft:#eef5ff;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
+      --radius:14px;
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
@@ -15,326 +29,1940 @@
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
     .title-wrap h1{margin:0;font-size:34px;line-height:1.05}
     .title-wrap p{margin:6px 0 0;color:var(--muted);font-size:14px}
-    .breadcrumb-btn{border:none;background:transparent;color:var(--green);font-weight:800;cursor:pointer;padding:0;font-size:14px;font-family:inherit;margin-bottom:4px}
-    .btn-secondary,.btn-light{border:1px solid var(--line-dark);background:#fff;color:var(--text);padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+    .btn-primary,.btn-secondary,.btn-light,.btn-danger,.icon-btn{border-radius:10px;font-weight:700;cursor:pointer;font-size:14px;transition:.2s ease;font-family:inherit}
+    .btn-primary{border:none;background:var(--green);color:#fff;padding:14px 18px;display:inline-flex;align-items:center;gap:10px;box-shadow:var(--shadow)}
+    .btn-primary .plus{width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.2);display:inline-flex;align-items:center;justify-content:center;font-size:22px;line-height:1}
+    .btn-secondary,.btn-light{border:1px solid var(--line-dark);background:#fff;color:var(--text);padding:10px 14px}
+    .btn-danger{border:1px solid #f0c4cb;background:#fff5f6;color:#cf3344;padding:10px 14px}
+    .btn-light.small,.btn-secondary.small,.btn-danger.small{padding:7px 10px;font-size:12px}
+    .indicator-actions-inline{display:flex;flex-wrap:nowrap;gap:6px;align-items:center}
+    .btn-tight{padding:5px 8px !important;font-size:11px !important;line-height:1.1;white-space:nowrap}
+    .icon-btn{border:1px solid var(--line-dark);background:#fff;color:var(--text);width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center}
+    .icon-btn.plus-mini{width:28px;height:28px;border-radius:999px;font-size:18px}
     .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden}
     .filters{display:grid;grid-template-columns:1fr 220px;gap:12px;padding:18px;border-bottom:1px solid var(--line)}
-    .input,.select{width:100%;border:1px solid var(--line-dark);background:#fff;border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);outline:none;font-family:inherit}
-    .input:focus,.select:focus{border-color:#7bb7ff;box-shadow:0 0 0 3px rgba(69,137,255,.12)}
+    .input,.select,.textarea{width:100%;border:1px solid var(--line-dark);background:#fff;border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);outline:none;transition:.2s;border-color:var(--line-dark);font-family:inherit}
+    .input:focus,.select:focus,.textarea:focus{border-color:#7bb7ff;box-shadow:0 0 0 3px rgba(69,137,255,.12)}
+    .textarea{min-height:110px;resize:vertical}
     .table-wrap{overflow-x:auto}
-    table{width:100%;border-collapse:collapse;min-width:1180px}
-    th,td{padding:16px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+    table{width:100%;border-collapse:collapse;min-width:980px}
+    th,td{padding:16px 14px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
     th{text-align:left;color:var(--muted);font-weight:700;background:#fbfcfd}
     tbody tr:hover{background:#fcfdfd}
-    .group-cell{background:#fff;vertical-align:top}
-    .group-box{border:1px solid var(--line-dark);border-radius:12px;padding:12px 13px;background:#fff;box-shadow:0 6px 14px rgba(15,23,42,.04);min-width:210px}
-    .group-box.objective-box{border-left:4px solid var(--green)}
-    .group-box.initiative-box{border-left:4px solid var(--blue)}
-    .group-kicker{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:5px}
-    .group-sub{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.35}
-    .group-start td{border-top:1px solid var(--line)}
-    .action-stack{display:flex;flex-direction:column;gap:6px}
-    .objective-name{font-weight:800;color:var(--green)}
-    .initiative-name{font-weight:700;color:var(--text)}
-    .action-title{font-weight:800;color:var(--text);margin-bottom:5px}
-    .action-detail{color:var(--muted);font-size:12px;line-height:1.4;max-width:360px}
-    .status-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700;font-size:12px;white-space:nowrap}
-    .status-activo,.status-terminada,.status-terminado{background:var(--green-soft);color:var(--green)}
-    .status-en_progreso{background:var(--blue-soft);color:var(--blue)}
-    .status-por_hacer,.status-pendiente{background:#eef2f7;color:#667085}
-    .status-pausada,.status-pausado{background:var(--yellow-soft);color:var(--yellow)}
+    .objective-link{color:var(--green);font-weight:700;text-decoration:none;cursor:pointer}
+    .actions-inline{display:flex;flex-wrap:wrap;gap:8px}
+    .progress-bar{width:120px;height:10px;background:#edf1f5;border-radius:999px;overflow:hidden;margin-bottom:6px}
+    .progress-fill{height:100%;border-radius:999px}
+    .progress-label{font-size:12px;color:var(--muted)}
+    .ring{--size:48px;width:var(--size);height:var(--size);border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--text);position:relative;background:conic-gradient(var(--ring-color) calc(var(--val)*1%), #edf1f5 0)}
+    .ring::after{content:"";width:36px;height:36px;background:#fff;border-radius:50%;position:absolute}
+    .ring span{position:relative;z-index:1}
+    .status-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:999px;font-weight:700;font-size:12px}
+    .status-activo{background:var(--green-soft);color:var(--green)}
     .status-en_riesgo{background:var(--yellow-soft);color:var(--yellow)}
-    .status-vencida{background:var(--red-soft);color:var(--red)}
+    .status-pausado{background:#eef2f7;color:#667085}
+    .status-cumplido{background:#eaf2ff;color:var(--blue)}
     .empty-state{padding:22px;text-align:center;color:var(--muted);font-size:14px}
-    .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
-    .summary-item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
-    .summary-label{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-bottom:6px}
-    .summary-value{font-size:24px;font-weight:800}
-    .advance-cell{text-align:center;vertical-align:middle;background:#fff}
-    .advance-box{display:inline-flex;flex-direction:column;align-items:center;gap:6px;min-width:94px}
-    .advance-ring{--size:58px;width:var(--size);height:var(--size);border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;color:var(--text);position:relative;background:conic-gradient(var(--advance-color) calc(var(--advance)*1%), #edf1f5 0)}
-    .advance-ring::after{content:"";width:44px;height:44px;background:#fff;border-radius:50%;position:absolute}
-    .advance-ring span{position:relative;z-index:1}
-    .advance-label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase}
-    @media (max-width:900px){.filters,.summary{grid-template-columns:1fr}.topbar{flex-direction:column;align-items:stretch}.page{padding:18px}}
+    .modal{position:fixed;inset:0;background:rgba(15,23,42,.38);display:none;align-items:center;justify-content:center;padding:24px;z-index:1000}
+    .modal.open{display:flex}
+    .modal-card{width:min(1180px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;box-shadow:0 30px 60px rgba(2,8,23,.2);border:1px solid var(--line)}
+    .modal-card.detail-card{width:min(1320px,100%)}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:3;gap:16px}
+    .modal-title{display:flex;flex-direction:column;gap:4px}
+    .modal-title h2{margin:0;font-size:24px}
+    .modal-title p{margin:0;color:var(--muted);font-size:13px}
+    .modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .form-grid{display:grid;grid-template-columns:1.35fr 1fr}
+    .col{padding:22px}
+    .col + .col{border-left:1px solid var(--line)}
+    .section{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px;background:#fff}
+    .section h3{margin:0 0 14px;font-size:15px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .small-btn{border:1px solid var(--line-dark);background:#fff;border-radius:9px;padding:8px 10px;font-size:12px;cursor:pointer;font-weight:700;color:var(--muted)}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .field{margin-bottom:14px}
+    label{display:block;margin-bottom:8px;font-size:13px;font-weight:700;color:#374151}
+    .hint{font-size:12px;color:var(--muted);margin-top:8px}
+    .repeat-list{display:flex;flex-direction:column;gap:12px}
+    .repeat-item{border:1px dashed #cfd8e3;border-radius:12px;padding:12px;background:#fbfdff;position:relative}
+    .remove-row{position:absolute;top:10px;right:10px;border:none;background:transparent;color:#b42318;font-weight:700;cursor:pointer}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip,.tag{display:inline-flex;gap:8px;align-items:center;background:var(--blue-soft);color:var(--blue);border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700}
+    .chip button,.tag button{border:none;background:transparent;color:var(--blue);cursor:pointer;padding:0;font-size:12px;font-weight:700}
+    .required::after{content:" *";color:var(--red)}
+
+    .detail-shell{background:#fff}
+    .detail-topbar{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line)}
+    .detail-title-row{display:flex;align-items:center;gap:12px;min-width:0}
+    .detail-title-row h2{margin:0;font-size:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .detail-grid-top{display:grid;grid-template-columns:1.2fr .8fr .8fr;border-bottom:1px solid var(--line)}
+    .detail-top-box{padding:18px 20px;min-height:108px}
+    .detail-top-box + .detail-top-box{border-left:1px solid var(--line)}
+    .metric-head{color:var(--muted);font-weight:700;font-size:13px;margin-bottom:10px}
+    .date-lines{display:grid;gap:8px;font-size:14px}
+    .detail-main{display:grid;grid-template-columns:1.7fr .8fr;min-height:420px}
+    .detail-right{border-left:1px solid var(--line)}
+    .detail-panel{padding:16px 18px;border-bottom:1px solid var(--line)}
+    .detail-panel h3{margin:0 0 14px;font-size:15px}
+    .subtle-label{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+    .desc-text{font-size:14px;line-height:1.45;margin-bottom:14px}
+    .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .meta-value{font-size:15px;font-weight:700}
+    .detail-table-wrap{overflow:auto}
+    .detail-table{width:100%;min-width:840px;border-collapse:collapse}
+    .detail-table th,.detail-table td{padding:12px 10px;border-bottom:1px solid var(--line);font-size:13px}
+    .detail-table th{background:#fff;color:#5c6675}
+    .tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-bottom:16px}
+    .tab-btn{background:none;border:none;padding:0 0 12px;cursor:pointer;font-weight:700;color:var(--muted);border-bottom:2px solid transparent}
+    .tab-btn.active{color:var(--green);border-color:var(--green)}
+    .tab-pane{display:none}
+    .tab-pane.active{display:block}
+    .comment-list,.history-list{display:flex;flex-direction:column;gap:12px;margin-bottom:14px}
+    .comment-card,.history-card,.simple-card,.activity-card{border:1px solid var(--line-dark);background:#fff;border-radius:14px;padding:12px 14px}
+    .comment-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
+    .comment-author{font-weight:700}
+    .comment-date{font-size:12px;color:var(--muted)}
+    .comment-text{font-size:14px;line-height:1.45}
+    .comment-form{display:grid;grid-template-columns:200px 1fr auto;gap:10px;align-items:start}
+    .activity-list-scroll{max-height:320px;overflow-y:auto;padding-right:4px;display:flex;flex-direction:column;gap:12px}
+    .activity-card .head{display:flex;justify-content:space-between;gap:10px;align-items:center;font-weight:700;margin-bottom:10px}
+    .activity-meta{font-size:13px;color:#55606f;display:grid;gap:4px}
+    .tiny-progress{height:10px;background:#edf1f5;border-radius:999px;overflow:hidden;margin:6px 0 10px}
+    .tiny-progress div{height:100%}
+    .right-section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+    .tag-tools{display:flex;align-items:center;gap:8px}
+    .inline-add{display:none;margin-top:10px}
+    .inline-add.open{display:flex;gap:8px}
+    .muted{color:var(--muted)}
+    .indicator-view-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .inline-number-input{width:88px;padding:8px 10px;border:1px solid var(--line-dark);border-radius:8px;background:#fff;font-size:13px;font-family:inherit}
+    .inline-number-input:focus{outline:none;border-color:#7bb7ff;box-shadow:0 0 0 3px rgba(69,137,255,.12)}
+    .inline-current-wrap{display:flex;align-items:center;gap:6px}
+    .view-history-btn{width:30px;height:30px;border:1px solid var(--line-dark);background:#fff;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;line-height:1}
+    .value-history-table-wrap{max-height:340px;overflow:auto;padding:0 22px 22px}
+    .value-history-table{width:100%;border-collapse:collapse}
+    .value-history-table th,.value-history-table td{padding:12px 10px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}
+    .value-history-table th{background:#fbfcfd;color:var(--text)}
+    .value-history-empty{padding:22px;color:var(--muted);font-size:14px}
+    .history-subnote{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+    .hidden-indicator-note{font-size:12px;color:var(--muted);margin-bottom:10px}
+    .indicator-hidden-row{background:#fbfcfe}
+    .meta-action-wrap{display:flex;align-items:center;gap:6px}
+    .activity-head-actions{display:flex;align-items:center;gap:8px}
+    .activity-header-right{display:flex;align-items:center;gap:10px}
+    .meta-plan-note{padding:0 22px 14px;color:var(--muted);font-size:13px}
+    .meta-plan-row .grid-3{align-items:end}
+    .modal-body-pad{padding:22px}
+    .modal-mini-subnote{font-size:12px;color:var(--muted);margin-top:6px}
+    .calendar-btn{font-size:13px}
+    .inline-target-wrap{display:flex;align-items:center;gap:6px}
+    .meta-plan-chip{background:#f7fafc;border:1px solid var(--line-dark);border-radius:10px;padding:8px 10px;font-size:12px;color:var(--muted)}
+    .activity-empty-note{font-size:13px;color:var(--muted)}
+    .section-mini-list{display:flex;flex-direction:column;gap:10px}
+    .mini-item{border:1px solid var(--line-dark);background:#fff;border-radius:12px;padding:10px 12px;font-size:13px}
+    .mini-item-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:4px}
+    .mini-item-title{font-weight:700}
+    .mini-item-sub{color:var(--muted);font-size:12px;line-height:1.4}
+    .check-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+    .check-row:last-child{border-bottom:none}
+    .check-row input[type="checkbox"]{width:16px;height:16px}
+    .check-row.done .check-label{text-decoration:line-through;color:var(--muted)}
+    .check-label{flex:1;font-size:14px}
+    .inline-add.stack{display:none;flex-direction:column;gap:8px}
+    .inline-add.stack.open{display:flex}
+    .link-anchor{color:var(--blue);text-decoration:none;font-weight:700;word-break:break-all}
+    .file-upload-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .file-upload-wrap input[type="file"]{max-width:100%}
+    .pill-action{border:1px solid var(--line-dark);background:#fff;border-radius:999px;padding:4px 8px;font-size:11px;cursor:pointer}
+    .activity-modal-form{padding:22px}
+    @media (max-width:1100px){
+      .filters,.grid-2,.grid-3,.grid-4,.three-col,.comment-form,.detail-grid-top,.detail-main,.form-grid{grid-template-columns:1fr}
+      .col + .col,.detail-right,.detail-top-box + .detail-top-box{border-left:none;border-top:1px solid var(--line)}
+    }
+    @media (max-width:780px){
+      .page{padding:18px}
+      .topbar{flex-direction:column;align-items:stretch}
+      .btn-primary{justify-content:center}
+      .modal-actions button{flex:1}
+      .detail-title-row h2{font-size:22px;white-space:normal}
+      .detail-topbar{align-items:flex-start;flex-direction:column}
+    }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="topbar">
       <div class="title-wrap">
-        <button class="breadcrumb-btn" type="button" onclick="history.back()">← Volver a Objetivos</button>
-        <h1>Tablero Operativo</h1>
-        <p id="subtitle">Concentrado de acciones por objetivo e iniciativa.</p>
+        <h1>Objetivos</h1>
+        <p>Primer index funcional para el módulo de seguimiento estratégico de Ximpler.</p>
       </div>
-      <a class="btn-secondary" href="objetivos_actualizado.html">Volver al inicio</a>
-    </div>
-
-    <div class="summary">
-      <div class="summary-item"><div class="summary-label">Objetivos</div><div id="sumObjectives" class="summary-value">0</div></div>
-      <div class="summary-item"><div class="summary-label">Iniciativas</div><div id="sumInitiatives" class="summary-value">0</div></div>
-      <div class="summary-item"><div class="summary-label">Acciones</div><div id="sumActions" class="summary-value">0</div></div>
-      <div class="summary-item"><div class="summary-label">Vencidas</div><div id="sumOverdue" class="summary-value">0</div></div>
-      <div class="summary-item"><div class="summary-label">% Operativo</div><div id="sumOperational" class="summary-value">0%</div></div>
+      <button id="openFormBtn" class="btn-primary">
+        <span>Nuevo Objetivo</span>
+        <span class="plus">+</span>
+      </button>
     </div>
 
     <div class="card">
       <div class="filters">
-        <input id="searchInput" class="input" type="text" placeholder="Buscar por objetivo, iniciativa, acción o responsable" />
+        <input id="searchInput" class="input" type="text" placeholder="Buscar / Filtrar" />
         <select id="statusFilter" class="select">
-          <option value="all" selected>Todos los estatus</option>
-          <option value="Por hacer">Por hacer</option>
-          <option value="En progreso">En progreso</option>
-          <option value="Terminada">Terminada</option>
-          <option value="Pausada">Pausada</option>
-          <option value="Vencida">Vencida</option>
+          <option value="all">Todos los estatus</option>
+          <option value="activo" selected>Activos</option>
+          <option value="en_riesgo">En riesgo</option>
+          <option value="pausado">Pausados</option>
+          <option value="cumplido">Cumplidos</option>
         </select>
       </div>
+
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>% Avance Operativo Obj.</th>
               <th>Objetivo</th>
-              <th>% Avance Operativo Inic.</th>
-              <th>Iniciativa(s)</th>
-              <th>Acciones</th>
-              <th>Responsable</th>
-              <th>Fecha de Compromiso</th>
+              <th>Avance Cualitativo</th>
+              <th>Avance Cuantitativo</th>
+              <th>Líder Responsable</th>
+              <th>Fecha</th>
               <th>Estatus</th>
+              <th>Acciones</th>
             </tr>
           </thead>
-          <tbody id="actionsBody"></tbody>
+          <tbody id="objectivesBody"></tbody>
         </table>
       </div>
-      <div id="emptyState" class="empty-state" style="display:none;">No hay acciones que coincidan con el filtro.</div>
+      <div id="emptyState" class="empty-state" style="display:none;">No hay objetivos que coincidan con el filtro.</div>
     </div>
   </div>
 
+  <div id="formModal" class="modal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="formModalTitle">Nuevo Objetivo</h2>
+          <p>Complete la información base del objetivo estratégico.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="closeFormBtn" class="btn-secondary" type="button">Cancelar</button>
+          <button id="saveObjectiveBtn" class="btn-primary" type="button"><span>Guardar Objetivo</span><span>💾</span></button>
+        </div>
+      </div>
+
+      <form id="objectiveForm">
+        <div class="form-grid">
+          <div class="col">
+            <div class="section">
+              <div class="field">
+                <label class="required" for="objectiveName">Nombre del Objetivo (KPI)</label>
+                <input id="objectiveName" class="input" type="text" placeholder="Ej. Reducir cartera vencida" required />
+              </div>
+
+              <div class="grid-2">
+                <div class="field">
+                  <label for="objectiveDescription">Descripción</label>
+                  <textarea id="objectiveDescription" class="textarea" placeholder="Describe el propósito, alcance o criterio de éxito del objetivo..."></textarea>
+                </div>
+                <div>
+                  <div class="field">
+                    <label for="startDate">Fecha de inicio</label>
+                    <input id="startDate" class="input" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="endDate">Fecha Compromiso</label>
+                    <input id="endDate" class="input" type="date" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="grid-2">
+                <div class="field">
+                  <label class="required" for="leader">Líder Responsable</label>
+                  <select id="leader" class="select" required>
+                    <option value="">Selecciona un líder</option>
+                    <option>Anel Castro</option>
+                    <option>Melchor Iván Angulo</option>
+                    <option>Ana García</option>
+                    <option>Carlos López</option>
+                    <option>María Torres</option>
+                    <option>Lucía</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="invited">Invitados</label>
+                  <select id="invited" class="select" multiple size="6">
+                    <option>Anel Castro</option>
+                    <option>Melchor Iván Angulo</option>
+                    <option>Ana García</option>
+                    <option>Carlos López</option>
+                    <option>María Torres</option>
+                    <option>Raúl Mendoza</option>
+                    <option>Sofía Vega</option>
+                    <option>Lucía</option>
+                  </select>
+                  <div class="hint">Usa Ctrl/Cmd + click para seleccionar varios invitados.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <h3>
+                <span>Indicadores Cuantitativos</span>
+                <button id="addIndicatorBtn" class="small-btn" type="button">+ Agregar</button>
+              </h3>
+              <div id="indicatorsList" class="repeat-list"></div>
+              <div class="hint">Aquí puedes agregar los indicadores alineados al objetivo y calcular el avance cuantitativo.</div>
+            </div>
+
+            <div class="section">
+              <h3>
+                <span>Actividades alineadas al objetivo</span>
+                <button id="addActivityBtn" class="small-btn" type="button">+ Agregar</button>
+              </h3>
+              <div id="activitiesList" class="repeat-list"></div>
+              <div class="hint">El promedio de cumplimiento de estas actividades impacta el Avance Cualitativo del objetivo.</div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="section">
+              <div class="field">
+                <label for="tagInput">Asignación de etiquetas</label>
+                <div class="grid-2">
+                  <input id="tagInput" class="input" type="text" placeholder="Escribe una etiqueta" />
+                  <button id="addTagBtn" class="btn-secondary" type="button">Agregar etiqueta</button>
+                </div>
+                <div id="tagsContainer" class="chips" style="margin-top:10px"></div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="field">
+                <label for="areas">Áreas involucradas en la ejecución o medición</label>
+                <select id="areas" class="select" multiple size="7">
+                  <option>Dirección General</option>
+                  <option>Comercial</option>
+                  <option>Cobranza</option>
+                  <option>Operaciones</option>
+                  <option>Finanzas</option>
+                  <option>Marketing</option>
+                  <option>RH</option>
+                  <option>Tecnología</option>
+                  <option>Administración</option>
+                </select>
+                <div class="hint">Selecciona una o más áreas.</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="field">
+                <label for="linkedProjects">Proyectos ligados</label>
+                <select id="linkedProjects" class="select" multiple size="7">
+                  <option>Proyecto Cobranza 2026</option>
+                  <option>Campaña Branding Norte</option>
+                  <option>Pipeline Comercial Q3</option>
+                  <option>Optimización Operativa X</option>
+                  <option>Transformación Digital Ventas</option>
+                  <option>Proyecto de Ventas</option>
+                  <option>Atención a Clientes Premium</option>
+                </select>
+                <div class="hint">Relaciona el objetivo con proyectos ya existentes dentro de Ximpler.</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="field">
+                <label for="objectiveStatus">Estatus inicial</label>
+                <select id="objectiveStatus" class="select">
+                  <option value="activo" selected>Activo</option>
+                  <option value="en_riesgo">En riesgo</option>
+                  <option value="pausado">Pausado</option>
+                  <option value="cumplido">Cumplido</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="detailModal" class="modal" aria-hidden="true">
+    <div class="modal-card detail-card">
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <div id="indicatorModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="width:min(760px,100%)">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="indicatorModalTitle">Nuevo Indicador Cuantitativo</h2>
+          <p id="indicatorModalSubtitle">Agrega un indicador desde la tarjeta del objetivo.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="closeIndicatorBtn" class="btn-secondary" type="button">Cancelar</button>
+          <button id="saveIndicatorBtn" class="btn-primary" type="button"><span id="saveIndicatorBtnLabel">Guardar Indicador</span><span>💾</span></button>
+        </div>
+      </div>
+      <form id="indicatorModalForm" style="padding:22px">
+        <div class="grid-2">
+          <div class="field">
+            <label class="required" for="modalIndicatorName">Indicador</label>
+            <input id="modalIndicatorName" class="input" type="text" placeholder="Ej. % recuperación" />
+          </div>
+          <div class="field">
+            <label for="modalIndicatorAction">Acción</label>
+            <select id="modalIndicatorAction" class="select">
+              <option value="Incrementar" selected>Incrementar</option>
+              <option value="Reducir">Reducir</option>
+              <option value="Mantener">Mantener</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label for="modalIndicatorUnit">Unidad de Medida</label>
+            <input id="modalIndicatorUnit" class="input" type="text" placeholder="%, $, días" />
+          </div>
+          <div class="field">
+            <label for="modalIndicatorOwner">Responsable</label>
+            <input id="modalIndicatorOwner" class="input" type="text" placeholder="Responsable del dato" />
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label for="modalIndicatorInitial">Valor Inicial</label>
+            <input id="modalIndicatorInitial" class="input" type="number" step="0.01" placeholder="0" />
+          </div>
+          <div class="field">
+            <label for="modalIndicatorTarget">Meta</label>
+            <input id="modalIndicatorTarget" class="input" type="number" step="0.01" placeholder="100" />
+          </div>
+          <div class="field">
+            <label for="modalIndicatorCurrent">Valor Actual</label>
+            <input id="modalIndicatorCurrent" class="input" type="number" step="0.01" placeholder="0" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="modalIndicatorFrequency">Frecuencia</label>
+          <select id="modalIndicatorFrequency" class="select">
+            <option>Diaria</option>
+            <option>Semanal</option>
+            <option selected>Mensual</option>
+            <option>Trimestral</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="valueHistoryModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="width:min(640px,100%)">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2>Historial de Registro del Valor Actual</h2>
+          <p id="valueHistorySubtitle">Indicador: —</p>
+        </div>
+        <div class="modal-actions">
+          <button id="closeValueHistoryBtn" class="btn-secondary" type="button">Cerrar</button>
+        </div>
+      </div>
+      <div id="valueHistoryContent"></div>
+    </div>
+  </div>
+
+  <div id="metaPlanModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="width:min(840px,100%)">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2>Planear Metas</h2>
+          <p id="metaPlanSubtitle">Indicador: —</p>
+        </div>
+        <div class="modal-actions">
+          <button id="closeMetaPlanBtn" class="btn-secondary" type="button">Cancelar</button>
+          <button id="saveMetaPlanBtn" class="btn-primary" type="button"><span>Guardar Planeación</span><span>💾</span></button>
+        </div>
+      </div>
+      <div class="meta-plan-note">Define metas futuras por fecha. Cuando llegue la fecha vigente, la meta se cargará automáticamente para el cálculo.</div>
+      <div class="modal-body-pad">
+        <div id="metaPlanRows" class="repeat-list"></div>
+        <div style="margin-top:14px">
+          <button id="addMetaPlanRowBtn" class="btn-secondary" type="button">Agregar fila</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="activityModal" class="modal" aria-hidden="true">
+    <div class="modal-card" style="width:min(760px,100%)">
+      <div class="modal-header">
+        <div class="modal-title">
+          <h2 id="activityModalTitle">Nueva Actividad</h2>
+          <p id="activityModalSubtitle">Agrega o edita una actividad desde la tarjeta del objetivo.</p>
+        </div>
+        <div class="modal-actions">
+          <button id="closeActivityBtn" class="btn-secondary" type="button">Cancelar</button>
+          <button id="saveActivityBtn" class="btn-primary" type="button"><span id="saveActivityBtnLabel">Guardar Actividad</span><span>💾</span></button>
+        </div>
+      </div>
+      <form id="activityModalForm" class="activity-modal-form">
+        <div class="grid-2">
+          <div class="field">
+            <label class="required" for="modalActivityName">Actividad</label>
+            <input id="modalActivityName" class="input" type="text" placeholder="Ej. Seguimiento a cartera crítica" />
+          </div>
+          <div class="field">
+            <label for="modalActivityOwner">Responsable</label>
+            <input id="modalActivityOwner" class="input" type="text" placeholder="Responsable" />
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="field">
+            <label for="modalActivityDate">Fecha compromiso</label>
+            <input id="modalActivityDate" class="input" type="date" />
+          </div>
+          <div class="field">
+            <label for="modalActivityStatus">Estatus</label>
+            <select id="modalActivityStatus" class="select">
+              <option value="pendiente">Pendiente</option>
+              <option value="en progreso" selected>En progreso</option>
+              <option value="terminada">Terminada</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="modalActivityProgress">Avance (%)</label>
+            <input id="modalActivityProgress" class="input" type="number" min="0" max="100" step="1" placeholder="0" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <template id="metaPlanRowTemplate">
+    <div class="repeat-item meta-plan-row">
+      <button class="remove-row" type="button">Eliminar</button>
+      <div class="grid-3">
+        <div class="field">
+          <label>Frecuencia</label>
+          <select class="select meta-frequency">
+            <option value="Quincenal">Quincenal</option>
+            <option value="Mensual" selected>Mensual</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Fecha planeada</label>
+          <input class="input meta-date" type="date" />
+        </div>
+        <div class="field">
+          <label>Meta planeada</label>
+          <input class="input meta-quantity" type="number" step="0.01" placeholder="0" />
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="indicatorTemplate">
+    <div class="repeat-item indicator-item">
+      <button class="remove-row" type="button">Eliminar</button>
+      <div class="grid-4">
+        <div class="field">
+          <label>Indicador</label>
+          <input class="input indicator-name" type="text" placeholder="Ej. % recuperación" />
+        </div>
+        <div class="field">
+          <label>Acción</label>
+          <select class="select indicator-action">
+            <option value="Incrementar" selected>Incrementar</option>
+            <option value="Reducir">Reducir</option>
+            <option value="Mantener">Mantener</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Unidad de Medida</label>
+          <input class="input indicator-unit" type="text" placeholder="%, $, días" />
+        </div>
+        <div class="field">
+          <label>Valor Inicial</label>
+          <input class="input indicator-initial" type="number" step="0.01" placeholder="0" />
+        </div>
+      </div>
+      <div class="grid-4">
+        <div class="field">
+          <label>Meta</label>
+          <input class="input indicator-target" type="number" step="0.01" placeholder="100" />
+        </div>
+        <div class="field">
+          <label>Valor Actual</label>
+          <input class="input indicator-current" type="number" step="0.01" placeholder="0" />
+        </div>
+        <div class="field">
+          <label>Frecuencia</label>
+          <select class="select indicator-frequency">
+            <option>Diaria</option>
+            <option>Semanal</option>
+            <option selected>Mensual</option>
+            <option>Trimestral</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Responsable</label>
+          <input class="input indicator-owner" type="text" placeholder="Responsable del dato" />
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <template id="activityTemplate">
+    <div class="repeat-item activity-item">
+      <button class="remove-row" type="button">Eliminar</button>
+      <div class="grid-2">
+        <div class="field">
+          <label>Actividad</label>
+          <input class="input activity-name" type="text" placeholder="Ej. Actualizar CxC" />
+        </div>
+        <div class="field">
+          <label>Responsable</label>
+          <input class="input activity-owner" type="text" placeholder="Responsable" />
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="field">
+          <label>Fecha compromiso</label>
+          <input class="input activity-date" type="date" />
+        </div>
+        <div class="field">
+          <label>Estatus</label>
+          <select class="select activity-status">
+            <option value="pendiente">Pendiente</option>
+            <option value="en progreso" selected>En progreso</option>
+            <option value="terminada">Terminada</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Avance (%)</label>
+          <input class="input activity-progress" type="number" min="0" max="100" step="1" placeholder="0" />
+        </div>
+      </div>
+    </div>
+  </template>
+
   <script>
-    const SAVE_KEY = 'ximpler_objetivos_demo_v7_planes';
-    const PLANNING_SAVE_KEY = 'ximpler_planeaciones_demo_v1';
-    const LEGACY_KEYS = ['ximpler_objetivos_demo_v7_planes','ximpler_objetivos_demo_v6_3','ximpler_objetivos_demo_v6_1','ximpler_objetivos_demo_v6','ximpler_objetivos_demo_v5','ximpler_objetivos_demo_v4','ximpler_objetivos_demo_v3','ximpler_objetivos_demo_v1'];
+    const STORAGE_KEYS = ['ximpler_objetivos_demo_v6','ximpler_objetivos_demo_v5','ximpler_objetivos_demo_v4','ximpler_objetivos_demo_v3','ximpler_objetivos_demo_v1'];
+    const SAVE_KEY = 'ximpler_objetivos_demo_v6';
 
-    function escapeHtml(text){ const div = document.createElement('div'); div.textContent = String(text ?? ''); return div.innerHTML; }
-    function formatDate(dateString){ if (!dateString) return '—'; const date = new Date(dateString + 'T00:00:00'); return new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(date); }
-   function formatRelativeDate(dateString){
-  if (!dateString) return '—';
+    const sampleObjectives = [
+      {
+        id: crypto.randomUUID(),
+        name: 'Recuperar Cartera Vencida',
+        description: 'Recuperar cartera vencida correspondiente al periodo 2019 y 2020.',
+        startDate: '2021-05-13',
+        endDate: '2021-05-31',
+        leader: 'Anel Castro',
+        createdBy: 'Anel Castro',
+        invited: ['Carlos López', 'María Torres'],
+        indicators: [{ name: '% recuperación', action: 'Incrementar', unit: '%', initialValue: 0, target: 100, current: 85, frequency: 'Mensual', owner: 'Cobranza' }],
+        activities: [
+          { name: 'Actualizar CxC', owner: 'Carlos López', dueDate: '2021-05-25', status: 'en progreso', progress: 10 },
+          { name: 'Otra actividad de prueba', owner: 'Lucía', dueDate: '2026-05-08', status: 'en progreso', progress: 30 }
+        ],
+        tags: ['Ingresos'],
+        areas: [],
+        linkedProjects: [],
+        status: 'activo',
+        comments: [{ author: 'Anel Castro', text: 'Se inició revisión de expedientes para acelerar cobro.', date: '2021-05-15' }],
+        history: ['Objetivo creado el 13-may-2021.']
+      },
+      {
+        id: crypto.randomUUID(),
+        name: 'Posicionar la marca en redes sociales',
+        description: 'Incrementar notoriedad y tracción digital de marca en redes clave.',
+        startDate: '2021-05-13',
+        endDate: '2021-12-31',
+        leader: 'Anel Castro',
+        createdBy: 'Anel Castro',
+        invited: ['Ana García', 'Sofía Vega'],
+        indicators: [{ name: 'Alcance mensual', action: 'Incrementar', unit: '%', initialValue: 5, target: 100, current: 25, frequency: 'Mensual', owner: 'Marketing' }],
+        activities: [
+          { name: 'Calendario de contenidos', owner: 'Ana García', dueDate: '2021-06-15', status: 'terminada', progress: 100 },
+          { name: 'Campaña de awareness', owner: 'Sofía Vega', dueDate: '2021-07-10', status: 'en progreso', progress: 70 }
+        ],
+        tags: ['Marketing', 'Branding'],
+        areas: ['Marketing', 'Dirección General'],
+        linkedProjects: ['Campaña Branding Norte'],
+        status: 'activo',
+        comments: [],
+        history: ['Objetivo creado el 13-may-2021.']
+      }
+    ];
 
-  const today = new Date();
-  today.setHours(0,0,0,0);
+    const state = { objectives: loadObjectives(), formTags: [], editingId: null, detailId: null, detailTab: 'comments', detailIndicatorView: 'active', indicatorModalMode: 'create', editingIndicatorIndex: null, valueHistoryModalIndicatorIndex: null, metaPlanIndicatorIndex: null, activityModalMode: 'create', editingActivityIndex: null };
+    const objectivesBody = document.getElementById('objectivesBody');
+    const emptyState = document.getElementById('emptyState');
+    const formModal = document.getElementById('formModal');
+    const detailModal = document.getElementById('detailModal');
+    const objectiveForm = document.getElementById('objectiveForm');
+    const formModalTitle = document.getElementById('formModalTitle');
+    const indicatorsList = document.getElementById('indicatorsList');
+    const activitiesList = document.getElementById('activitiesList');
+    const tagsContainer = document.getElementById('tagsContainer');
+    const detailContent = document.getElementById('detailContent');
+    const indicatorModal = document.getElementById('indicatorModal');
+    const indicatorModalForm = document.getElementById('indicatorModalForm');
+    const valueHistoryModal = document.getElementById('valueHistoryModal');
+    const valueHistoryContent = document.getElementById('valueHistoryContent');
+    const metaPlanModal = document.getElementById('metaPlanModal');
+    const metaPlanRows = document.getElementById('metaPlanRows');
+    const activityModal = document.getElementById('activityModal');
+    const activityModalForm = document.getElementById('activityModalForm');
 
-  const target = new Date(dateString + 'T00:00:00');
-  target.setHours(0,0,0,0);
-
-  const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
-
-  if (diffDays > 0) return `En ${diffDays} día${diffDays !== 1 ? 's' : ''}`;
-  if (diffDays === 0) return 'Hoy';
-  return `Terminó hace ${Math.abs(diffDays)} día${diffDays !== -1 ? 's' : ''}`;
-}
-    function statusKey(status){ return String(status || 'Por hacer').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,'_'); }
-    function isOverdue(dueDate, status){ if (!dueDate) return false; if (String(status).toLowerCase() === 'terminada') return false; const today = new Date(); today.setHours(0,0,0,0); return new Date(dueDate + 'T00:00:00') < today; }
-    function isDoneStatus(status){ return ['terminada','terminado','completada','completado','cumplida','cumplido'].includes(statusKey(status)); }
-    function actionAdvance(action){ return isDoneStatus(action?.status) ? 100 : 0; }
-    function initiativeOperationalAdvance(activity = {}){
-  const actions = Array.isArray(activity.actions) ? activity.actions.map(normalizeAction) : [];
-
-  // Si NO tiene acciones asignadas, usa el estatus de la iniciativa:
-  // Terminada = 100%, cualquier otro estatus = 0%
-  if (!actions.length) {
-    return isDoneStatus(activity.status) ? 100 : 0;
-  }
-
-  // Si SÍ tiene acciones, promedia el avance real de sus acciones:
-  // Terminada = 100%, cualquier otro estatus = 0%
-  return Math.round(
-    actions.reduce((acc, action) => acc + actionAdvance(action), 0) / actions.length
-  );
-}
-    function objectiveOperationalAdvance(obj = {}){
-      const activities = Array.isArray(obj.activities) ? obj.activities : [];
-      if (!activities.length) return 0;
-      return Math.round(activities.reduce((acc, activity) => acc + initiativeOperationalAdvance(activity), 0) / activities.length);
+    function normalizeComment(comment){
+      if (typeof comment === 'string') return { author:'Sistema', text:comment, date:new Date().toISOString().slice(0,10) };
+      return { author: comment?.author || 'Sistema', text: comment?.text || '', date: comment?.date || new Date().toISOString().slice(0,10) };
     }
-    function getAdvanceColor(value){ if (value >= 80) return 'var(--green)'; if (value >= 50) return 'var(--yellow)'; return 'var(--red)'; }
-    function advanceRing(value, label){
-      const val = Math.max(0, Math.min(100, Number(value || 0)));
-      return '<div class="advance-box"><div class="advance-ring" style="--advance:' + val + '; --advance-color:' + getAdvanceColor(val) + ';"><span>' + val + '%</span></div>' + (label ? '<div class="advance-label">' + escapeHtml(label) + '</div>' : '') + '</div>';
-    }
 
-    function normalizeAction(action = {}){
+    function normalizeValueHistoryEntry(entry, fallbackValue = 0){
+      if (typeof entry === 'number') return { timestamp: new Date().toISOString(), value: Number(entry), actor: 'Sistema' };
       return {
-        title: action.title || action.name || '',
-        responsible: action.responsible || action.owner || '',
-        dueDate: action.dueDate || action.date || '',
-        detail: action.detail || action.description || '',
-        status: action.status || 'Por hacer'
+        timestamp: entry?.timestamp || entry?.date || new Date().toISOString(),
+        value: Number(entry?.value ?? fallbackValue ?? 0),
+        actor: entry?.actor || entry?.updatedBy || 'Sistema'
+      };
+    }
+
+    function normalizeMetaPlanEntry(entry, fallbackQuantity = 0){
+      return {
+        frequency: entry?.frequency || 'Mensual',
+        plannedDate: entry?.plannedDate || entry?.date || '',
+        quantity: Number(entry?.quantity ?? entry?.target ?? fallbackQuantity ?? 0)
+      };
+    }
+
+    function normalizeObjective(obj){
+      const invited = obj.invited || obj.involved || [];
+      const activities = obj.activities || obj.initiatives || [];
+      return {
+        id: obj.id || crypto.randomUUID(),
+        name: obj.name || '',
+        description: obj.description || '',
+        startDate: obj.startDate || '',
+        endDate: obj.endDate || '',
+        leader: obj.leader || '',
+        createdBy: obj.createdBy || obj.leader || 'Sistema',
+        invited,
+        indicators: (obj.indicators || []).map(ind => ({
+          name: ind.name || '',
+          action: ind.action || 'Incrementar',
+          unit: ind.unit || '',
+          initialValue: Number(ind.initialValue ?? ind.initial ?? 0),
+          target: Number(ind.target ?? 0),
+          current: Number(ind.current ?? 0),
+          frequency: ind.frequency || 'Mensual',
+          owner: ind.owner || '',
+          hidden: Boolean(ind.hidden),
+          valueHistory: Array.isArray(ind.valueHistory) ? ind.valueHistory.map(entry => normalizeValueHistoryEntry(entry, ind.current ?? 0)) : [],
+          metaPlan: Array.isArray(ind.metaPlan) ? ind.metaPlan.map(entry => normalizeMetaPlanEntry(entry, ind.target ?? 0)) : []
+        })),
+        activities: activities.map(act => ({
+          name: act.name || '',
+          owner: act.owner || '',
+          dueDate: act.dueDate || '',
+          status: act.status || 'pendiente',
+          progress: Number(act.progress ?? 0)
+        })),
+        reminders: Array.isArray(obj.reminders) ? obj.reminders.map(item => ({
+          text: item?.text || item?.title || '',
+          dueDate: item?.dueDate || item?.date || ''
+        })).filter(item => item.text) : [],
+        checklist: Array.isArray(obj.checklist) ? obj.checklist.map(item => ({
+          text: item?.text || item?.label || '',
+          done: Boolean(item?.done)
+        })).filter(item => item.text) : [],
+        links: Array.isArray(obj.links) ? obj.links.map(item => ({
+          title: item?.title || item?.name || item?.url || '',
+          url: item?.url || ''
+        })).filter(item => item.title || item.url) : [],
+        attachments: Array.isArray(obj.attachments) ? obj.attachments.map(item => ({
+          name: item?.name || item?.fileName || 'Archivo',
+          size: Number(item?.size || 0),
+          addedAt: item?.addedAt || item?.date || new Date().toISOString()
+        })) : [],
+        tags: Array.isArray(obj.tags) ? obj.tags : [],
+        areas: Array.isArray(obj.areas) ? obj.areas : [],
+        linkedProjects: Array.isArray(obj.linkedProjects) ? obj.linkedProjects : [],
+        status: obj.status || 'activo',
+        comments: Array.isArray(obj.comments) ? obj.comments.map(normalizeComment).filter(c=>c.text) : [],
+        history: Array.isArray(obj.history) ? obj.history : []
       };
     }
 
     function loadObjectives(){
-      for (const key of LEGACY_KEYS){
+      for (const key of STORAGE_KEYS){
         const saved = localStorage.getItem(key);
         if (!saved) continue;
-        try {
+        try{
           const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed)) return parsed;
-        } catch(e) {}
+          if (Array.isArray(parsed) && parsed.length) return parsed.map(normalizeObjective);
+        }catch(e){}
       }
-      return [];
+      return sampleObjectives.map(normalizeObjective);
     }
 
-    function loadPlannings(){
-      try { return JSON.parse(localStorage.getItem(PLANNING_SAVE_KEY) || '[]'); }
-      catch(e){ return []; }
+    function persistObjectives(){ localStorage.setItem(SAVE_KEY, JSON.stringify(state.objectives)); }
+    function formatDate(dateString){ if (!dateString) return '—'; const date = new Date(dateString + 'T00:00:00'); return new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(date); }
+    function statusLabel(status){ return ({activo:'Activo', en_riesgo:'En riesgo', pausado:'Pausado', cumplido:'Cumplido'})[status] || status; }
+    function getProgressColor(value){ if (value >= 80) return 'var(--green)'; if (value >= 50) return 'var(--yellow)'; return 'var(--red)'; }
+    function getEffectiveTarget(indicator = {}, referenceDate = new Date()){
+      const baseTarget = Number(indicator.target ?? 0);
+      const plans = Array.isArray(indicator.metaPlan)
+        ? indicator.metaPlan.filter(item => item?.plannedDate).sort((a, b) => String(a.plannedDate).localeCompare(String(b.plannedDate)))
+        : [];
+      if (!plans.length) return baseTarget;
+      const currentDate = referenceDate instanceof Date ? referenceDate : new Date(referenceDate);
+      const currentKey = currentDate.toISOString().slice(0, 10);
+      const applicable = plans.filter(item => item.plannedDate <= currentKey);
+      if (!applicable.length) return baseTarget;
+      return Number(applicable[applicable.length - 1].quantity ?? baseTarget);
+    }
+    function calculateIndicatorAdvance(indicator = {}, allowNegative = true){
+      const action = String(indicator.action || 'Incrementar').toLowerCase();
+      const initial = Number(indicator.initialValue ?? 0);
+      const target = Number(getEffectiveTarget(indicator) ?? indicator.target ?? 0);
+      const current = Number(indicator.current ?? 0);
+
+      const normalizeProgress = (value) => {
+        if (allowNegative) return Math.round(Math.min(100, value));
+        return Math.round(Math.max(0, Math.min(100, value)));
+      };
+
+      if (action === 'reducir') {
+        const totalReductionNeeded = initial - target;
+        if (totalReductionNeeded <= 0) return current <= target ? 100 : (allowNegative ? -100 : 0);
+        const achievedReduction = initial - current;
+        return normalizeProgress((achievedReduction / totalReductionNeeded) * 100);
+      }
+
+      if (action === 'mantener') {
+        if (current === target) return 100;
+        const toleranceBase = Math.abs(initial) || Math.abs(target) || 1;
+        return normalizeProgress((-Math.abs(current - target) / toleranceBase) * 100);
+      }
+
+      const totalGrowthNeeded = target - initial;
+      if (totalGrowthNeeded <= 0) return current >= target ? 100 : (allowNegative ? -100 : 0);
+      const achievedGrowth = current - initial;
+      return normalizeProgress((achievedGrowth / totalGrowthNeeded) * 100);
+    }
+    function calculateQuantitativeProgress(indicators=[]){
+      const visibleIndicators = indicators.filter(item => !item.hidden);
+      if (!visibleIndicators.length) return 0;
+      const vals = visibleIndicators.map(item => calculateIndicatorAdvance(item, false));
+      return Math.round(vals.reduce((a,b)=>a+b,0) / vals.length);
+    }
+    function calculateQualitativeProgress(activities=[]){ if (!activities.length) return 0; const vals = activities.map(item => Math.max(0, Math.min(100, Number(item.progress || 0)))); return Math.round(vals.reduce((a,b)=>a+b,0) / vals.length); }
+    function uniqueParticipants(obj){ return Array.from(new Set([obj.createdBy, obj.leader, ...(obj.invited || [])].filter(Boolean))); }
+    function formatDateTime(date = new Date()){
+      const value = date instanceof Date ? date : new Date(date);
+      return new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }).format(value);
+    }
+    function askActionUser(defaultName = ''){
+      const seed = localStorage.getItem('ximpler_last_actor') || defaultName || '';
+      const answer = prompt('¿Quién realiza esta acción?', seed);
+      if (answer === null) return null;
+      const name = answer.trim();
+      if (!name) {
+        alert('Debes indicar quién realiza la acción.');
+        return null;
+      }
+      localStorage.setItem('ximpler_last_actor', name);
+      return name;
+    }
+    function addHistoryEntry(obj, message){
+      if (!Array.isArray(obj.history)) obj.history = [];
+      obj.history.unshift(message);
+    }
+    function escapeHtml(text){ const div = document.createElement('div'); div.textContent = String(text ?? ''); return div.innerHTML; }
+    function clearMultiSelect(id){ Array.from(document.getElementById(id).options).forEach(opt => opt.selected = false); }
+    function setMultiSelectValues(id, values=[]){ const set = new Set(values); Array.from(document.getElementById(id).options).forEach(opt => { const val = opt.value || opt.textContent; opt.selected = set.has(val); }); }
+    function getMultiSelectValues(selectEl){ return Array.from(selectEl.selectedOptions).map(opt => opt.value || opt.textContent).filter(Boolean); }
+
+    function addIndicatorRow(data={}){
+      const tpl = document.getElementById('indicatorTemplate');
+      const node = tpl.content.firstElementChild.cloneNode(true);
+      node.querySelector('.indicator-name').value = data.name || '';
+      node.querySelector('.indicator-action').value = data.action || 'Incrementar';
+      node.querySelector('.indicator-unit').value = data.unit || '';
+      node.querySelector('.indicator-initial').value = data.initialValue ?? '';
+      node.querySelector('.indicator-target').value = data.target ?? '';
+      node.querySelector('.indicator-current').value = data.current ?? '';
+      node.querySelector('.indicator-frequency').value = data.frequency || 'Mensual';
+      node.querySelector('.indicator-owner').value = data.owner || '';
+      node.querySelector('.remove-row').onclick = () => node.remove();
+      indicatorsList.appendChild(node);
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const planningId = params.get('planningId');
-    const plannings = loadPlannings();
-    const planning = plannings.find(item => item.id === planningId);
-    const objectives = loadObjectives().filter(obj => !planningId || obj.planningId === planningId);
-
-    if (planning) {
-      document.getElementById('subtitle').textContent = `${planning.name} · Concentrado de acciones por objetivo e iniciativa.`;
+    function addActivityRow(data={}){
+      const tpl = document.getElementById('activityTemplate');
+      const node = tpl.content.firstElementChild.cloneNode(true);
+      node.querySelector('.activity-name').value = data.name || '';
+      node.querySelector('.activity-owner').value = data.owner || '';
+      node.querySelector('.activity-date').value = data.dueDate || '';
+      node.querySelector('.activity-status').value = data.status || 'en progreso';
+      node.querySelector('.activity-progress').value = data.progress ?? '';
+      node.querySelector('.remove-row').onclick = () => node.remove();
+      activitiesList.appendChild(node);
     }
 
-    function buildRows(){
-      const rows = [];
-      objectives.forEach(obj => {
-        const activities = Array.isArray(obj.activities) ? obj.activities : [];
-        activities.forEach(activity => {
-          const actions = Array.isArray(activity.actions) ? activity.actions.map(normalizeAction) : [];
-          if (!actions.length) {
-            rows.push({
-              objective: obj.name || '—',
-              objectiveAdvance: objectiveOperationalAdvance(obj),
-              initiative: activity.name || '—',
-              initiativeAdvance: initiativeOperationalAdvance(activity),
-              actionTitle: 'Sin acciones asignadas',
-              actionDetail: 'Esta iniciativa todavía no tiene acciones registradas.',
-              responsible: activity.owner || obj.leader || '—',
-              dueDate: activity.dueDate || '',
-              status: activity.status || 'pendiente',
-              hasAction: false
-            });
-            return;
-          }
-          actions.forEach(action => {
-            const overdue = isOverdue(action.dueDate, action.status);
-            rows.push({
-              objective: obj.name || '—',
-              objectiveAdvance: objectiveOperationalAdvance(obj),
-              initiative: activity.name || '—',
-              initiativeAdvance: initiativeOperationalAdvance(activity),
-              actionTitle: action.title || 'Sin título',
-              actionDetail: action.detail || '',
-              responsible: action.responsible || activity.owner || obj.leader || '—',
-              dueDate: action.dueDate || '',
-              status: overdue ? 'Vencida' : (action.status || 'Por hacer'),
-              hasAction: true
-            });
-          });
-        });
+    function collectIndicators(){
+      return Array.from(document.querySelectorAll('.indicator-item')).map(item => ({
+        name: item.querySelector('.indicator-name').value.trim(),
+        action: item.querySelector('.indicator-action').value,
+        unit: item.querySelector('.indicator-unit').value.trim(),
+        initialValue: Number(item.querySelector('.indicator-initial').value || 0),
+        target: Number(item.querySelector('.indicator-target').value || 0),
+        current: Number(item.querySelector('.indicator-current').value || 0),
+        frequency: item.querySelector('.indicator-frequency').value,
+        owner: item.querySelector('.indicator-owner').value.trim()
+      })).filter(item => item.name);
+    }
+
+    function collectActivities(){
+      return Array.from(document.querySelectorAll('.activity-item')).map(item => ({
+        name: item.querySelector('.activity-name').value.trim(),
+        owner: item.querySelector('.activity-owner').value.trim(),
+        dueDate: item.querySelector('.activity-date').value,
+        status: item.querySelector('.activity-status').value,
+        progress: Number(item.querySelector('.activity-progress').value || 0)
+      })).filter(item => item.name);
+    }
+
+    function renderFormTags(){
+      tagsContainer.innerHTML = state.formTags.map((tag, index) => `<span class="chip">${escapeHtml(tag)} <button type="button" data-remove-form-tag="${index}">×</button></span>`).join('');
+      document.querySelectorAll('[data-remove-form-tag]').forEach(btn => btn.onclick = () => { state.formTags.splice(Number(btn.dataset.removeFormTag), 1); renderFormTags(); });
+    }
+
+    function addFormTag(){
+      const input = document.getElementById('tagInput');
+      const value = input.value.trim();
+      if (!value) return;
+      if (!state.formTags.includes(value)) state.formTags.push(value);
+      input.value = '';
+      renderFormTags();
+    }
+
+    function resetForm(){
+      objectiveForm.reset();
+      indicatorsList.innerHTML = '';
+      activitiesList.innerHTML = '';
+      state.formTags = [];
+      state.editingId = null;
+      formModalTitle.textContent = 'Nuevo Objetivo';
+      renderFormTags();
+      addIndicatorRow();
+      addActivityRow();
+      clearMultiSelect('invited');
+      clearMultiSelect('areas');
+      clearMultiSelect('linkedProjects');
+    }
+
+    function openFormModal(){ formModal.classList.add('open'); formModal.setAttribute('aria-hidden', 'false'); }
+    function closeFormModal(){ formModal.classList.remove('open'); formModal.setAttribute('aria-hidden', 'true'); }
+
+    function buildHistory(previous, name){
+      const stamp = new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(new Date());
+      if (!previous) return [`Objetivo creado el ${stamp}.`];
+      const history = Array.isArray(previous.history) ? [...previous.history] : [];
+      history.unshift(`Objetivo actualizado (${name}) el ${stamp}.`);
+      return history;
+    }
+
+    function saveObjective(){
+      const name = document.getElementById('objectiveName').value.trim();
+      const leader = document.getElementById('leader').value.trim();
+      if (!name) return alert('Ingresa el Nombre del Objetivo (KPI).');
+      if (!leader) return alert('Selecciona un Líder Responsable.');
+
+      const previous = state.editingId ? state.objectives.find(obj => obj.id === state.editingId) : null;
+      const objective = normalizeObjective({
+        id: state.editingId || crypto.randomUUID(),
+        name,
+        description: document.getElementById('objectiveDescription').value.trim(),
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        leader,
+        createdBy: previous?.createdBy || leader,
+        invited: getMultiSelectValues(document.getElementById('invited')),
+        indicators: collectIndicators(),
+        activities: collectActivities(),
+        tags: [...state.formTags],
+        areas: getMultiSelectValues(document.getElementById('areas')),
+        linkedProjects: getMultiSelectValues(document.getElementById('linkedProjects')),
+        status: document.getElementById('objectiveStatus').value,
+        comments: previous?.comments || [],
+        history: buildHistory(previous, name)
       });
-      return rows;
+
+      if (state.editingId){
+        const index = state.objectives.findIndex(obj => obj.id === state.editingId);
+        if (index !== -1) state.objectives[index] = objective;
+      } else {
+        state.objectives.unshift(objective);
+      }
+
+      persistObjectives();
+      renderObjectives();
+      closeFormModal();
+      resetForm();
     }
 
-    function groupRows(rows){
-      const objectiveGroups = [];
-      rows.forEach(row => {
-        let objectiveGroup = objectiveGroups.find(group => group.name === row.objective);
-        if (!objectiveGroup) {
-          objectiveGroup = { name: row.objective, rows: [], initiativeGroups: [] };
-          objectiveGroups.push(objectiveGroup);
-        }
-        objectiveGroup.rows.push(row);
-        let initiativeGroup = objectiveGroup.initiativeGroups.find(group => group.name === row.initiative);
-        if (!initiativeGroup) {
-          initiativeGroup = { name: row.initiative, rows: [] };
-          objectiveGroup.initiativeGroups.push(initiativeGroup);
-        }
-        initiativeGroup.rows.push(row);
-      });
-      return objectiveGroups;
+    function startEdit(id){
+      const obj = state.objectives.find(item => item.id === id);
+      if (!obj) return;
+      resetForm();
+      state.editingId = id;
+      formModalTitle.textContent = 'Editar Objetivo';
+      document.getElementById('objectiveName').value = obj.name;
+      document.getElementById('objectiveDescription').value = obj.description;
+      document.getElementById('startDate').value = obj.startDate;
+      document.getElementById('endDate').value = obj.endDate;
+      document.getElementById('leader').value = obj.leader;
+      document.getElementById('objectiveStatus').value = obj.status;
+      setMultiSelectValues('invited', obj.invited);
+      setMultiSelectValues('areas', obj.areas);
+      setMultiSelectValues('linkedProjects', obj.linkedProjects);
+      indicatorsList.innerHTML = '';
+      activitiesList.innerHTML = '';
+      (obj.indicators.length ? obj.indicators : [{}]).forEach(addIndicatorRow);
+      (obj.activities.length ? obj.activities : [{}]).forEach(addActivityRow);
+      state.formTags = [...obj.tags];
+      renderFormTags();
+      openFormModal();
     }
 
-    function render(){
+    function deleteObjective(id){
+      const obj = state.objectives.find(item => item.id === id);
+      if (!obj) return;
+      if (!confirm(`¿Seguro que deseas eliminar el objetivo "${obj.name}"?`)) return;
+      state.objectives = state.objectives.filter(item => item.id !== id);
+      persistObjectives();
+      renderObjectives();
+      if (state.detailId === id) closeDetailModal();
+    }
+
+    function renderObjectives(){
       const query = document.getElementById('searchInput').value.trim().toLowerCase();
-      const filterStatus = document.getElementById('statusFilter').value;
-      const allRows = buildRows();
-      const rows = allRows.filter(row => {
-        const haystack = [row.objective, row.initiative, row.actionTitle, row.actionDetail, row.responsible, row.status].join(' ').toLowerCase();
-        return (!query || haystack.includes(query)) && (filterStatus === 'all' || row.status === filterStatus);
+      const status = document.getElementById('statusFilter').value;
+      const filtered = state.objectives.filter(obj => {
+        const haystack = [obj.name, obj.description, obj.leader, obj.createdBy, ...(obj.tags || []), ...(obj.areas || []), ...(obj.linkedProjects || []), ...(obj.invited || []), ...((obj.reminders || []).map(x => x.text || '')), ...((obj.checklist || []).map(x => x.text || '')), ...((obj.links || []).flatMap(x => [x.title || '', x.url || ''])), ...((obj.attachments || []).map(x => x.name || ''))].join(' ').toLowerCase();
+        return (!query || haystack.includes(query)) && (status === 'all' || obj.status === status);
       });
 
-      const objectiveCount = new Set(objectives.map(obj => obj.id || obj.name)).size;
-      const initiativeCount = objectives.reduce((acc, obj) => acc + (Array.isArray(obj.activities) ? obj.activities.length : 0), 0);
-      const actionCount = allRows.filter(row => row.hasAction).length;
-      const overdueCount = allRows.filter(row => row.status === 'Vencida').length;
-      document.getElementById('sumObjectives').textContent = objectiveCount;
-      document.getElementById('sumInitiatives').textContent = initiativeCount;
-      document.getElementById('sumActions').textContent = actionCount;
-      document.getElementById('sumOverdue').textContent = overdueCount;
-      const operationalTotal = objectives.length ? Math.round(objectives.reduce((acc, obj) => acc + objectiveOperationalAdvance(obj), 0) / objectives.length) : 0;
-      document.getElementById('sumOperational').textContent = operationalTotal + '%';
+      objectivesBody.innerHTML = '';
+      emptyState.style.display = filtered.length ? 'none' : 'block';
 
-      const body = document.getElementById('actionsBody');
-      const objectiveGroups = groupRows(rows);
-      const html = [];
+      filtered.forEach(obj => {
+        const ql = calculateQualitativeProgress(obj.activities);
+        const qt = calculateQuantitativeProgress(obj.indicators);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><a class="objective-link" data-view-id="${obj.id}">${escapeHtml(obj.name)}</a></td>
+          <td><div class="progress-bar"><div class="progress-fill" style="width:${ql}%; background:${getProgressColor(ql)};"></div></div><div class="progress-label">${ql}%</div></td>
+          <td><div class="ring" style="--val:${qt}; --ring-color:${getProgressColor(qt)};"><span>${qt}%</span></div></td>
+          <td>${escapeHtml(obj.leader || '—')}</td>
+          <td>${formatDate(obj.endDate)}</td>
+          <td><span class="status-badge status-${obj.status}">${statusLabel(obj.status)}</span></td>
+          <td>
+            <div class="actions-inline">
+              <button class="btn-light small" type="button" data-view-id="${obj.id}">Detalles</button>
+              <button class="btn-secondary small" type="button" data-edit-id="${obj.id}">Editar</button>
+              <button class="btn-danger small" type="button" data-delete-id="${obj.id}">Eliminar</button>
+            </div>
+          </td>
+        `;
+        objectivesBody.appendChild(tr);
+      });
 
-      objectiveGroups.forEach(objectiveGroup => {
-        let printedObjective = false;
-        objectiveGroup.initiativeGroups.forEach(initiativeGroup => {
-          let printedInitiative = false;
-          initiativeGroup.rows.forEach(row => {
-            const cells = [];
-            const isObjectiveStart = !printedObjective;
-            const isInitiativeStart = !printedInitiative;
-            if (isObjectiveStart) {
-              const objAdvance = objectiveGroup.rows[0]?.objectiveAdvance ?? 0;
-              cells.push(`
-                <td class="advance-cell" rowspan="${objectiveGroup.rows.length}">${advanceRing(objAdvance, 'Objetivo')}</td>
-                <td class="group-cell" rowspan="${objectiveGroup.rows.length}">
-                  <div class="group-box objective-box">
-                    <div class="group-kicker">Objetivo</div>
-                    <div class="objective-name">${escapeHtml(objectiveGroup.name)}</div>
-                    <div class="group-sub">${objectiveGroup.initiativeGroups.length} iniciativa(s) · ${objectiveGroup.rows.filter(item => item.hasAction).length} acción(es)</div>
+      document.querySelectorAll('[data-view-id]').forEach(btn => btn.onclick = () => openDetailModal(btn.dataset.viewId));
+      document.querySelectorAll('[data-edit-id]').forEach(btn => btn.onclick = () => startEdit(btn.dataset.editId));
+      document.querySelectorAll('[data-delete-id]').forEach(btn => btn.onclick = () => deleteObjective(btn.dataset.deleteId));
+    }
+
+
+    function resetIndicatorModal(){
+      indicatorModalForm.reset();
+      state.indicatorModalMode = 'create';
+      state.editingIndicatorIndex = null;
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (obj?.leader) document.getElementById('modalIndicatorOwner').value = obj.leader;
+      document.getElementById('modalIndicatorFrequency').value = 'Mensual';
+      document.getElementById('modalIndicatorAction').value = 'Incrementar';
+      document.getElementById('indicatorModalTitle').textContent = 'Nuevo Indicador Cuantitativo';
+      document.getElementById('indicatorModalSubtitle').textContent = 'Agrega un indicador desde la tarjeta del objetivo.';
+      document.getElementById('saveIndicatorBtnLabel').textContent = 'Guardar Indicador';
+    }
+
+    function openIndicatorModal(mode = 'create', indicatorIndex = null){
+      resetIndicatorModal();
+      state.indicatorModalMode = mode;
+      state.editingIndicatorIndex = indicatorIndex;
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (mode === 'edit' && obj && indicatorIndex !== null && obj.indicators[indicatorIndex]) {
+        const indicator = obj.indicators[indicatorIndex];
+        document.getElementById('indicatorModalTitle').textContent = 'Editar Indicador Cuantitativo';
+        document.getElementById('indicatorModalSubtitle').textContent = 'Actualiza la información del indicador seleccionado.';
+        document.getElementById('saveIndicatorBtnLabel').textContent = 'Actualizar Indicador';
+        document.getElementById('modalIndicatorName').value = indicator.name || '';
+        document.getElementById('modalIndicatorAction').value = indicator.action || 'Incrementar';
+        document.getElementById('modalIndicatorUnit').value = indicator.unit || '';
+        document.getElementById('modalIndicatorInitial').value = indicator.initialValue ?? '';
+        document.getElementById('modalIndicatorTarget').value = indicator.target ?? '';
+        document.getElementById('modalIndicatorCurrent').value = indicator.current ?? '';
+        document.getElementById('modalIndicatorFrequency').value = indicator.frequency || 'Mensual';
+        document.getElementById('modalIndicatorOwner').value = indicator.owner || '';
+      }
+      indicatorModal.classList.add('open');
+      indicatorModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('modalIndicatorName').focus();
+    }
+
+    function closeIndicatorModal(){
+      indicatorModal.classList.remove('open');
+      indicatorModal.setAttribute('aria-hidden', 'true');
+      indicatorModalForm.reset();
+      state.indicatorModalMode = 'create';
+      state.editingIndicatorIndex = null;
+    }
+
+    function saveIndicatorFromModal(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const name = document.getElementById('modalIndicatorName').value.trim();
+      if (!name) return alert('Escribe el nombre del indicador.');
+
+      const indicator = {
+        name,
+        action: document.getElementById('modalIndicatorAction').value,
+        unit: document.getElementById('modalIndicatorUnit').value.trim(),
+        initialValue: Number(document.getElementById('modalIndicatorInitial').value || 0),
+        target: Number(document.getElementById('modalIndicatorTarget').value || 0),
+        current: Number(document.getElementById('modalIndicatorCurrent').value || 0),
+        frequency: document.getElementById('modalIndicatorFrequency').value,
+        owner: document.getElementById('modalIndicatorOwner').value.trim(),
+        hidden: false,
+        valueHistory: [],
+        metaPlan: []
+      };
+
+      if (state.indicatorModalMode === 'edit' && state.editingIndicatorIndex !== null && obj.indicators[state.editingIndicatorIndex]) {
+        const actor = askActionUser(obj.leader);
+        if (!actor) return;
+        const original = obj.indicators[state.editingIndicatorIndex];
+        indicator.hidden = Boolean(original.hidden);
+        indicator.valueHistory = Array.isArray(original.valueHistory) ? [...original.valueHistory] : [];
+        indicator.metaPlan = Array.isArray(original.metaPlan) ? [...original.metaPlan] : [];
+        if (Number(original.current || 0) !== Number(indicator.current || 0)) {
+          indicator.valueHistory.unshift({ timestamp: new Date().toISOString(), value: Number(indicator.current || 0), actor });
+        }
+        obj.indicators[state.editingIndicatorIndex] = indicator;
+        addHistoryEntry(obj, `Indicador "${name}" editado por ${actor} el ${formatDateTime()}.`);
+      } else {
+        indicator.valueHistory = [{ timestamp: new Date().toISOString(), value: Number(indicator.current || 0), actor: indicator.owner || obj.leader || 'Sistema' }];
+        obj.indicators.push(indicator);
+        addHistoryEntry(obj, `Indicador cuantitativo agregado: ${name}.`);
+      }
+
+      persistObjectives();
+      closeIndicatorModal();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function updateIndicatorCurrentValue(indicatorIndex, rawValue){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj || !obj.indicators[indicatorIndex]) return;
+      const indicator = obj.indicators[indicatorIndex];
+      const parsed = Number(rawValue);
+      if (Number.isNaN(parsed)) {
+        alert('Ingresa un valor numérico válido.');
+        renderDetailModal();
+        return;
+      }
+      const oldValue = Number(indicator.current || 0);
+      if (oldValue === parsed) return;
+      const actor = askActionUser(obj.leader);
+      if (!actor) {
+        renderDetailModal();
+        return;
+      }
+      indicator.current = parsed;
+      if (!Array.isArray(indicator.valueHistory)) indicator.valueHistory = [];
+      indicator.valueHistory.unshift({ timestamp: new Date().toISOString(), value: parsed, actor });
+      addHistoryEntry(obj, `Valor actual del indicador "${indicator.name}" actualizado de ${oldValue} a ${parsed} por ${actor} el ${formatDateTime()}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function hideIndicator(indicatorIndex){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj || !obj.indicators[indicatorIndex]) return;
+      const actor = askActionUser(obj.leader);
+      if (!actor) return;
+      obj.indicators[indicatorIndex].hidden = true;
+      addHistoryEntry(obj, `Indicador "${obj.indicators[indicatorIndex].name}" ocultado por ${actor} el ${formatDateTime()}.`);
+      state.detailIndicatorView = 'active';
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function recoverIndicator(indicatorIndex){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj || !obj.indicators[indicatorIndex]) return;
+      const actor = askActionUser(obj.leader);
+      if (!actor) return;
+      obj.indicators[indicatorIndex].hidden = false;
+      addHistoryEntry(obj, `Indicador "${obj.indicators[indicatorIndex].name}" recuperado por ${actor} el ${formatDateTime()}.`);
+      state.detailIndicatorView = 'active';
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function resetMetaPlanModal(){
+      metaPlanRows.innerHTML = '';
+      state.metaPlanIndicatorIndex = null;
+      document.getElementById('metaPlanSubtitle').textContent = 'Indicador: —';
+    }
+
+    function addMetaPlanRow(data = {}){
+      const tpl = document.getElementById('metaPlanRowTemplate');
+      const node = tpl.content.firstElementChild.cloneNode(true);
+      node.querySelector('.meta-frequency').value = data.frequency || 'Mensual';
+      node.querySelector('.meta-date').value = data.plannedDate || '';
+      node.querySelector('.meta-quantity').value = data.quantity ?? '';
+      node.querySelector('.remove-row').onclick = () => node.remove();
+      metaPlanRows.appendChild(node);
+    }
+
+    function collectMetaPlanRows(){
+      return Array.from(document.querySelectorAll('.meta-plan-row')).map(item => ({
+        frequency: item.querySelector('.meta-frequency').value,
+        plannedDate: item.querySelector('.meta-date').value,
+        quantity: Number(item.querySelector('.meta-quantity').value || 0)
+      })).filter(item => item.plannedDate).sort((a, b) => String(a.plannedDate).localeCompare(String(b.plannedDate)));
+    }
+
+    function openMetaPlanModal(indicatorIndex){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      const indicator = obj?.indicators?.[indicatorIndex];
+      if (!indicator) return;
+      resetMetaPlanModal();
+      state.metaPlanIndicatorIndex = indicatorIndex;
+      document.getElementById('metaPlanSubtitle').textContent = `Indicador: ${indicator.name} · Meta base: ${indicator.target ?? 0}`;
+      const plans = Array.isArray(indicator.metaPlan) ? indicator.metaPlan : [];
+      if (plans.length) plans.forEach(addMetaPlanRow);
+      else addMetaPlanRow({ frequency: indicator.frequency || 'Mensual', quantity: indicator.target ?? 0 });
+      metaPlanModal.classList.add('open');
+      metaPlanModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeMetaPlanModal(){
+      metaPlanModal.classList.remove('open');
+      metaPlanModal.setAttribute('aria-hidden', 'true');
+      resetMetaPlanModal();
+    }
+
+    function saveMetaPlanFromModal(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      const indicator = obj?.indicators?.[state.metaPlanIndicatorIndex];
+      if (!indicator) return;
+      const actor = askActionUser(obj.leader);
+      if (!actor) return;
+      indicator.metaPlan = collectMetaPlanRows();
+      addHistoryEntry(obj, `Planeación de metas del indicador "${indicator.name}" actualizada por ${actor} el ${formatDateTime()}.`);
+      persistObjectives();
+      closeMetaPlanModal();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function resetActivityModal(){
+      activityModalForm.reset();
+      state.activityModalMode = 'create';
+      state.editingActivityIndex = null;
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (obj?.leader) document.getElementById('modalActivityOwner').value = obj.leader;
+      document.getElementById('modalActivityStatus').value = 'en progreso';
+      document.getElementById('activityModalTitle').textContent = 'Nueva Actividad';
+      document.getElementById('activityModalSubtitle').textContent = 'Agrega o edita una actividad desde la tarjeta del objetivo.';
+      document.getElementById('saveActivityBtnLabel').textContent = 'Guardar Actividad';
+    }
+
+    function openActivityModal(mode = 'create', activityIndex = null){
+      resetActivityModal();
+      state.activityModalMode = mode;
+      state.editingActivityIndex = activityIndex;
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (mode === 'edit' && obj && activityIndex !== null && obj.activities[activityIndex]) {
+        const activity = obj.activities[activityIndex];
+        document.getElementById('activityModalTitle').textContent = 'Editar Actividad';
+        document.getElementById('activityModalSubtitle').textContent = 'Actualiza la información de la actividad seleccionada.';
+        document.getElementById('saveActivityBtnLabel').textContent = 'Actualizar Actividad';
+        document.getElementById('modalActivityName').value = activity.name || '';
+        document.getElementById('modalActivityOwner').value = activity.owner || '';
+        document.getElementById('modalActivityDate').value = activity.dueDate || '';
+        document.getElementById('modalActivityStatus').value = activity.status || 'en progreso';
+        document.getElementById('modalActivityProgress').value = activity.progress ?? 0;
+      }
+      activityModal.classList.add('open');
+      activityModal.setAttribute('aria-hidden', 'false');
+      document.getElementById('modalActivityName').focus();
+    }
+
+    function closeActivityModal(){
+      activityModal.classList.remove('open');
+      activityModal.setAttribute('aria-hidden', 'true');
+      resetActivityModal();
+    }
+
+    function saveActivityFromModal(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const name = document.getElementById('modalActivityName').value.trim();
+      if (!name) return alert('Escribe el nombre de la actividad.');
+      const actor = askActionUser(obj.leader);
+      if (!actor) return;
+
+      const activity = {
+        name,
+        owner: document.getElementById('modalActivityOwner').value.trim(),
+        dueDate: document.getElementById('modalActivityDate').value,
+        status: document.getElementById('modalActivityStatus').value,
+        progress: Number(document.getElementById('modalActivityProgress').value || 0)
+      };
+
+      if (state.activityModalMode === 'edit' && state.editingActivityIndex !== null && obj.activities[state.editingActivityIndex]) {
+        obj.activities[state.editingActivityIndex] = activity;
+        addHistoryEntry(obj, `Actividad "${activity.name}" actualizada por ${actor} el ${formatDateTime()}.`);
+      } else {
+        obj.activities.push(activity);
+        addHistoryEntry(obj, `Actividad "${activity.name}" agregada por ${actor} el ${formatDateTime()}.`);
+      }
+
+      persistObjectives();
+      closeActivityModal();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function openDetailModal(id){
+      state.detailId = id;
+      state.detailTab = 'comments';
+      state.detailIndicatorView = 'active';
+      renderDetailModal();
+      detailModal.classList.add('open');
+      detailModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeDetailModal(){
+      detailModal.classList.remove('open');
+      detailModal.setAttribute('aria-hidden', 'true');
+      closeValueHistoryModal();
+      state.detailId = null;
+      state.detailTab = 'comments';
+      state.detailIndicatorView = 'active';
+    }
+
+    function buildCommentMarkup(comment){
+      return `<div class="comment-card"><div class="comment-head"><div class="comment-author">${escapeHtml(comment.author)}</div><div class="comment-date">${formatDate(comment.date)}</div></div><div class="comment-text">${escapeHtml(comment.text)}</div></div>`;
+    }
+
+    function formatFileSize(size = 0){
+      const n = Number(size || 0);
+      if (n >= 1024 * 1024) return `${(n / (1024 * 1024)).toFixed(2)} MB`;
+      if (n >= 1024) return `${(n / 1024).toFixed(1)} KB`;
+      return `${n} B`;
+    }
+
+    function renderDetailModal(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj){
+        detailContent.innerHTML = '<div class="detail-shell"><div class="detail-panel">No se encontró el objetivo.</div></div>';
+        return;
+      }
+
+      const ql = calculateQualitativeProgress(obj.activities);
+      const qt = calculateQuantitativeProgress(obj.indicators);
+      const participants = uniqueParticipants(obj);
+
+      detailContent.innerHTML = `
+        <div class="detail-shell">
+          <div class="detail-topbar">
+            <div class="detail-title-row">
+              <button class="icon-btn" type="button" id="detailBackBtn">←</button>
+              <h2>${escapeHtml(obj.name)}</h2>
+            </div>
+            <div class="modal-actions">
+              <button class="btn-secondary" type="button" id="detailEditBtn">Editar</button>
+              <button class="btn-danger" type="button" id="detailDeleteBtn">Eliminar</button>
+            </div>
+          </div>
+
+          <div class="detail-grid-top">
+            <div class="detail-top-box">
+              <div class="metric-head">Fechas</div>
+              <div class="date-lines">
+                <div><strong>Fecha Inicio:</strong> ${formatDate(obj.startDate)}</div>
+                <div><strong>Fecha Compromiso:</strong> ${formatDate(obj.endDate)}</div>
+              </div>
+            </div>
+            <div class="detail-top-box">
+              <div class="metric-head">Avance Cualitativo</div>
+              <div class="progress-bar" style="width:160px"><div class="progress-fill" style="width:${ql}%; background:${getProgressColor(ql)};"></div></div>
+              <div class="progress-label">${ql}%</div>
+            </div>
+            <div class="detail-top-box">
+              <div class="metric-head">Avance Cuantitativo</div>
+              <div class="ring" style="--val:${qt}; --ring-color:${getProgressColor(qt)};"><span>${qt}%</span></div>
+            </div>
+          </div>
+
+          <div class="detail-main">
+            <div class="detail-left">
+              <div class="detail-panel">
+                <h3>Descripción</h3>
+                <div class="desc-text">${escapeHtml(obj.description || 'Sin descripción')}</div>
+                <div class="three-col">
+                  <div><div class="subtle-label">Creador</div><div class="meta-value">${escapeHtml(obj.createdBy || '—')}</div></div>
+                  <div><div class="subtle-label">Líder Responsable</div><div class="meta-value">${escapeHtml(obj.leader || '—')}</div></div>
+                  <div><div class="subtle-label">Invitados</div><div class="meta-value">${escapeHtml((obj.invited || []).join(', ') || '—')}</div></div>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="right-section-title">
+                  <h3 style="margin:0">Indicadores Cuantitativos</h3>
+                  <div class="indicator-view-tools">
+                    <button class="btn-light small" type="button" id="toggleHiddenIndicatorsBtn">${state.detailIndicatorView === 'hidden' ? 'Ver Activos' : 'Indicadores Ocultos'}</button>
+                    <button class="btn-secondary small" type="button" id="detailAddIndicatorBtn">Agregar +</button>
                   </div>
-                </td>`);
-              printedObjective = true;
-            }
-            if (isInitiativeStart) {
-              const initAdvance = initiativeGroup.rows[0]?.initiativeAdvance ?? 0;
-              cells.push(`
-                <td class="advance-cell" rowspan="${initiativeGroup.rows.length}">${advanceRing(initAdvance, 'Iniciativa')}</td>
-                <td class="group-cell" rowspan="${initiativeGroup.rows.length}">
-                  <div class="group-box initiative-box">
-                    <div class="group-kicker">Iniciativa</div>
-                    <div class="initiative-name">${escapeHtml(initiativeGroup.name)}</div>
-                    <div class="group-sub">${initiativeGroup.rows.filter(item => item.hasAction).length || 0} acción(es)</div>
+                </div>
+                ${state.detailIndicatorView === 'hidden' ? '<div class="hidden-indicator-note">Aquí puedes visualizar indicadores ocultos y recuperarlos.</div>' : ''}
+                <div class="detail-table-wrap">
+                  <table class="detail-table">
+                    <thead>
+                      <tr>
+                        <th>Indicador</th>
+                        <th>Acción</th>
+                        <th>Unidad de Medida</th>
+                        <th>Valor Inicial</th>
+                        <th>Meta</th>
+                        <th>Valor Actual</th>
+                        <th>Avance</th>
+                        <th>Responsable</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${(() => {
+                        const source = obj.indicators
+                          .map((ind, index) => ({ ...ind, _index: index }))
+                          .filter(ind => state.detailIndicatorView === 'hidden' ? ind.hidden : !ind.hidden);
+                        if (!source.length) {
+                          return `<tr><td colspan="9" class="muted">${state.detailIndicatorView === 'hidden' ? 'No hay indicadores ocultos.' : 'Sin indicadores capturados.'}</td></tr>`;
+                        }
+                        return source.map(ind => {
+                          const effectiveTarget = getEffectiveTarget(ind);
+                          const advance = calculateIndicatorAdvance({ ...ind, target: effectiveTarget });
+                          const targetCell = `<div class="inline-target-wrap"><span>${escapeHtml(effectiveTarget ?? '—')}</span><button class="view-history-btn calendar-btn" type="button" title="Planear metas" data-plan-meta-index="${ind._index}">📅</button></div>`;
+                          const currentCell = state.detailIndicatorView === 'hidden'
+                            ? `<div class="inline-current-wrap"><span>${escapeHtml(ind.current ?? '—')}</span><button class="view-history-btn" type="button" title="Ver historial" data-view-history-index="${ind._index}">👁</button></div>`
+                            : `<div class="inline-current-wrap"><input class="inline-number-input" type="number" step="0.01" value="${escapeHtml(ind.current ?? 0)}" data-update-current-index="${ind._index}" /><button class="view-history-btn" type="button" title="Ver historial" data-view-history-index="${ind._index}">👁</button></div>`;
+                          const actionsCell = state.detailIndicatorView === 'hidden'
+                            ? `<button class="btn-secondary small" type="button" data-recover-indicator-index="${ind._index}">Recuperar</button>`
+                            : `<div class="indicator-actions-inline"><button class="btn-secondary small btn-tight" type="button" data-edit-indicator-index="${ind._index}">Editar</button><button class="btn-light small btn-tight" type="button" data-hide-indicator-index="${ind._index}">Ocultar</button></div>`;
+                          return `<tr class="${ind.hidden ? 'indicator-hidden-row' : ''}"><td>${escapeHtml(ind.name)}</td><td>${escapeHtml(ind.action || '—')}</td><td>${escapeHtml(ind.unit || '—')}</td><td>${escapeHtml(ind.initialValue ?? '—')}</td><td>${targetCell}</td><td>${currentCell}</td><td>${advance}%</td><td>${escapeHtml(ind.owner || '—')}</td><td>${actionsCell}</td></tr>`;
+                        }).join('');
+                      })()}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="tabs">
+                  <button class="tab-btn ${state.detailTab === 'comments' ? 'active' : ''}" type="button" data-detail-tab="comments">Comentarios</button>
+                  <button class="tab-btn ${state.detailTab === 'history' ? 'active' : ''}" type="button" data-detail-tab="history">Historial</button>
+                </div>
+
+                <div class="tab-pane ${state.detailTab === 'comments' ? 'active' : ''}">
+                  <div class="comment-list">
+                    ${obj.comments.length ? obj.comments.map(buildCommentMarkup).join('') : '<div class="simple-card muted">Sin comentarios registrados.</div>'}
                   </div>
-                </td>`);
-              printedInitiative = true;
-            }
-            cells.push(`
-              <td><div class="action-stack"><div class="action-title">${escapeHtml(row.actionTitle)}</div>${row.actionDetail ? `<div class="action-detail">${escapeHtml(row.actionDetail)}</div>` : ''}</div></td>
-              <td>${escapeHtml(row.responsible)}</td>
-              <td>${formatRelativeDate(row.dueDate)}</td>
-              <td><span class="status-badge status-${statusKey(row.status)}">${escapeHtml(row.status)}</span></td>`);
-            html.push(`<tr class="${isObjectiveStart || isInitiativeStart ? 'group-start' : ''}">${cells.join('')}</tr>`);
-          });
+                  <div class="comment-form">
+                    <select id="newCommentAuthor" class="select">
+                      ${participants.map(name => `<option>${escapeHtml(name)}</option>`).join('')}
+                    </select>
+                    <textarea id="newCommentText" class="textarea" style="min-height:72px" placeholder="Agregar comentario"></textarea>
+                    <button class="btn-primary" type="button" id="addCommentBtn">Agregar comentario</button>
+                  </div>
+                </div>
+
+                <div class="tab-pane ${state.detailTab === 'history' ? 'active' : ''}">
+                  <div class="history-list">
+                    ${obj.history.length ? obj.history.map(item => `<div class="history-card">${escapeHtml(item)}</div>`).join('') : '<div class="simple-card muted">Sin historial registrado.</div>'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="detail-right">
+              <div class="detail-panel">
+                <div class="right-section-title">
+                  <h3 style="margin:0">Agrega Actividades</h3>
+                  <button class="btn-secondary small" type="button" id="detailAddActivityBtn">Agregar +</button>
+                </div>
+                <div class="activity-list-scroll">
+                  ${obj.activities.length ? obj.activities.map((item, index) => `<div class="activity-card"><div class="head"><span>${escapeHtml(item.name)}</span><div class="activity-header-right"><span>${Number(item.progress || 0)}%</span><button class="btn-secondary small btn-tight" type="button" data-edit-activity-index="${index}">Editar</button></div></div><div class="tiny-progress"><div style="width:${Number(item.progress || 0)}%; background:${getProgressColor(Number(item.progress || 0))};"></div></div><div class="activity-meta"><div><strong>Responsable:</strong> ${escapeHtml(item.owner || '—')}</div><div><strong>Estatus:</strong> ${escapeHtml(item.status || '—')}</div><div><strong>Fecha:</strong> ${formatDate(item.dueDate)}</div></div></div>`).join('') : '<div class="simple-card muted">Sin actividades registradas.</div>'}
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="right-section-title">
+                  <h3 style="margin:0">Recordatorios</h3>
+                  <button class="btn-secondary small" type="button" id="toggleReminderBoxBtn">Agregar</button>
+                </div>
+                <div class="section-mini-list">
+                  ${obj.reminders.length ? obj.reminders.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.text)}</span><button class="btn-light small btn-tight" type="button" data-remove-reminder-index="${index}">Quitar</button></div><div class="mini-item-sub">${item.dueDate ? `Fecha: ${formatDate(item.dueDate)}` : 'Sin fecha'}</div></div>`).join('') : '<div class="muted">No hay recordatorios</div>'}
+                </div>
+                <div class="inline-add stack" id="inlineReminderBox">
+                  <input id="inlineReminderText" class="input" type="text" placeholder="Escribe un recordatorio" />
+                  <input id="inlineReminderDate" class="input" type="date" />
+                  <button class="btn-secondary" type="button" id="saveInlineReminderBtn">Agregar</button>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="right-section-title">
+                  <h3 style="margin:0">Etiquetas</h3>
+                  <div class="tag-tools"><button class="icon-btn plus-mini" type="button" id="toggleInlineTagBtn">+</button></div>
+                </div>
+                <div class="chips" id="detailTagsWrap">
+                  ${obj.tags.length ? obj.tags.map((tag, index) => `<span class="tag">${escapeHtml(tag)} <button type="button" data-remove-detail-tag="${index}">×</button></span>`).join('') : '<span class="muted">Sin etiquetas.</span>'}
+                </div>
+                <div class="inline-add" id="inlineTagBox">
+                  <input id="inlineTagInput" class="input" type="text" placeholder="Nueva etiqueta" />
+                  <button class="btn-secondary" type="button" id="saveInlineTagBtn">Agregar</button>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="right-section-title">
+                  <h3 style="margin:0">Check List</h3>
+                  <button class="btn-secondary small" type="button" id="toggleChecklistBoxBtn">Agregar</button>
+                </div>
+                <div>
+                  ${obj.checklist.length ? obj.checklist.map((item, index) => `<div class="check-row ${item.done ? 'done' : ''}"><input type="checkbox" ${item.done ? 'checked' : ''} data-toggle-check-index="${index}" /><span class="check-label">${escapeHtml(item.text)}</span><button class="btn-light small btn-tight" type="button" data-remove-check-index="${index}">Quitar</button></div>`).join('') : '<div class="muted">Sin elementos en check list</div>'}
+                </div>
+                <div class="inline-add stack" id="inlineChecklistBox">
+                  <input id="inlineChecklistText" class="input" type="text" placeholder="Nuevo elemento" />
+                  <button class="btn-secondary" type="button" id="saveInlineChecklistBtn">Agregar</button>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="right-section-title">
+                  <h3 style="margin:0">Enlaces</h3>
+                  <button class="btn-secondary small" type="button" id="toggleLinkBoxBtn">Agregar enlace</button>
+                </div>
+                <div class="section-mini-list">
+                  ${obj.links.length ? obj.links.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><a class="link-anchor" href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title || item.url || 'Enlace')}</a><button class="btn-light small btn-tight" type="button" data-remove-link-index="${index}">Quitar</button></div><div class="mini-item-sub">${escapeHtml(item.url || '')}</div></div>`).join('') : '<div class="muted">Sin enlaces</div>'}
+                </div>
+                <div class="inline-add stack" id="inlineLinkBox">
+                  <input id="inlineLinkTitle" class="input" type="text" placeholder="Nombre del enlace" />
+                  <input id="inlineLinkUrl" class="input" type="url" placeholder="https://..." />
+                  <button class="btn-secondary" type="button" id="saveInlineLinkBtn">Agregar enlace</button>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <div class="right-section-title">
+                  <h3 style="margin:0">Archivos Adjuntos</h3>
+                  <button class="btn-secondary small" type="button" id="toggleAttachmentBoxBtn">Adjuntar archivos</button>
+                </div>
+                <div class="section-mini-list">
+                  ${obj.attachments.length ? obj.attachments.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.name)}</span><button class="btn-light small btn-tight" type="button" data-remove-attachment-index="${index}">Quitar</button></div><div class="mini-item-sub">${formatFileSize(item.size)} · ${formatDateTime(item.addedAt)}</div></div>`).join('') : '<div class="muted">Sin archivos adjuntos</div>'}
+                </div>
+                <div class="inline-add stack" id="inlineAttachmentBox">
+                  <div class="file-upload-wrap">
+                    <input id="inlineAttachmentInput" type="file" multiple />
+                    <button class="btn-secondary" type="button" id="saveInlineAttachmentBtn">Registrar</button>
+                  </div>
+                  <div class="modal-mini-subnote">Se guardará el registro del archivo (nombre, tamaño y fecha) en esta demo local.</div>
+                </div>
+              </div>
+
+              <div class="detail-panel">
+                <h3>Áreas</h3>
+                ${obj.areas.length ? `<div class="chips">${obj.areas.map(area => `<span class="tag">${escapeHtml(area)}</span>`).join('')}</div>` : '<div class="muted">Sin registros.</div>'}
+              </div>
+
+              <div class="detail-panel">
+                <h3>Ligado a</h3>
+                ${obj.linkedProjects.length ? `<div class="chips">${obj.linkedProjects.map(project => `<span class="tag">${escapeHtml(project)}</span>`).join('')}</div>` : '<div class="muted">Sin proyectos ligados.</div>'}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('detailBackBtn').onclick = closeDetailModal;
+      document.getElementById('detailEditBtn').onclick = () => { const id = obj.id; closeDetailModal(); startEdit(id); };
+      document.getElementById('detailDeleteBtn').onclick = () => deleteObjective(obj.id);
+
+      const detailAddIndicatorBtn = document.getElementById('detailAddIndicatorBtn');
+      if (detailAddIndicatorBtn) detailAddIndicatorBtn.onclick = () => openIndicatorModal('create');
+
+      const toggleHiddenIndicatorsBtn = document.getElementById('toggleHiddenIndicatorsBtn');
+      if (toggleHiddenIndicatorsBtn) {
+        toggleHiddenIndicatorsBtn.onclick = () => {
+          state.detailIndicatorView = state.detailIndicatorView === 'hidden' ? 'active' : 'hidden';
+          renderDetailModal();
+        };
+      }
+
+      detailContent.querySelectorAll('[data-detail-tab]').forEach(btn => btn.onclick = () => {
+        state.detailTab = btn.dataset.detailTab;
+        renderDetailModal();
+      });
+
+      detailContent.querySelectorAll('[data-update-current-index]').forEach(input => {
+        input.addEventListener('change', () => updateIndicatorCurrentValue(Number(input.dataset.updateCurrentIndex), input.value));
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            input.blur();
+          }
         });
       });
 
-      body.innerHTML = html.join('');
-      document.getElementById('emptyState').style.display = rows.length ? 'none' : 'block';
+      detailContent.querySelectorAll('[data-view-history-index]').forEach(btn => {
+        btn.onclick = () => openValueHistoryModal(Number(btn.dataset.viewHistoryIndex));
+      });
+
+      detailContent.querySelectorAll('[data-plan-meta-index]').forEach(btn => {
+        btn.onclick = () => openMetaPlanModal(Number(btn.dataset.planMetaIndex));
+      });
+
+      detailContent.querySelectorAll('[data-edit-indicator-index]').forEach(btn => {
+        btn.onclick = () => openIndicatorModal('edit', Number(btn.dataset.editIndicatorIndex));
+      });
+
+      detailContent.querySelectorAll('[data-hide-indicator-index]').forEach(btn => {
+        btn.onclick = () => hideIndicator(Number(btn.dataset.hideIndicatorIndex));
+      });
+
+      detailContent.querySelectorAll('[data-recover-indicator-index]').forEach(btn => {
+        btn.onclick = () => recoverIndicator(Number(btn.dataset.recoverIndicatorIndex));
+      });
+
+      const detailAddActivityBtn = document.getElementById('detailAddActivityBtn');
+      if (detailAddActivityBtn) detailAddActivityBtn.onclick = () => openActivityModal('create');
+
+      detailContent.querySelectorAll('[data-edit-activity-index]').forEach(btn => {
+        btn.onclick = () => openActivityModal('edit', Number(btn.dataset.editActivityIndex));
+      });
+
+      const addCommentBtn = document.getElementById('addCommentBtn');
+      if (addCommentBtn) addCommentBtn.onclick = addCommentFromDetail;
+      const toggleInlineTagBtn = document.getElementById('toggleInlineTagBtn');
+      if (toggleInlineTagBtn) toggleInlineTagBtn.onclick = () => { const box = document.getElementById('inlineTagBox'); box.classList.toggle('open'); if (box.classList.contains('open')) document.getElementById('inlineTagInput').focus(); };
+      const saveInlineTagBtn = document.getElementById('saveInlineTagBtn');
+      if (saveInlineTagBtn) saveInlineTagBtn.onclick = addInlineTagToDetail;
+      const inlineTagInput = document.getElementById('inlineTagInput');
+      if (inlineTagInput) inlineTagInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addInlineTagToDetail(); } });
+      detailContent.querySelectorAll('[data-remove-detail-tag]').forEach(btn => btn.onclick = () => removeDetailTag(Number(btn.dataset.removeDetailTag)));
+
+      const toggleReminderBoxBtn = document.getElementById('toggleReminderBoxBtn');
+      if (toggleReminderBoxBtn) toggleReminderBoxBtn.onclick = () => { const box = document.getElementById('inlineReminderBox'); box.classList.toggle('open'); if (box.classList.contains('open')) document.getElementById('inlineReminderText').focus(); };
+      const saveInlineReminderBtn = document.getElementById('saveInlineReminderBtn');
+      if (saveInlineReminderBtn) saveInlineReminderBtn.onclick = addReminderFromDetail;
+      const inlineReminderText = document.getElementById('inlineReminderText');
+      if (inlineReminderText) inlineReminderText.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addReminderFromDetail(); } });
+      detailContent.querySelectorAll('[data-remove-reminder-index]').forEach(btn => btn.onclick = () => removeReminderFromDetail(Number(btn.dataset.removeReminderIndex)));
+
+      const toggleChecklistBoxBtn = document.getElementById('toggleChecklistBoxBtn');
+      if (toggleChecklistBoxBtn) toggleChecklistBoxBtn.onclick = () => { const box = document.getElementById('inlineChecklistBox'); box.classList.toggle('open'); if (box.classList.contains('open')) document.getElementById('inlineChecklistText').focus(); };
+      const saveInlineChecklistBtn = document.getElementById('saveInlineChecklistBtn');
+      if (saveInlineChecklistBtn) saveInlineChecklistBtn.onclick = addChecklistItemFromDetail;
+      const inlineChecklistText = document.getElementById('inlineChecklistText');
+      if (inlineChecklistText) inlineChecklistText.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addChecklistItemFromDetail(); } });
+      detailContent.querySelectorAll('[data-toggle-check-index]').forEach(input => input.onchange = () => toggleChecklistItem(Number(input.dataset.toggleCheckIndex), input.checked));
+      detailContent.querySelectorAll('[data-remove-check-index]').forEach(btn => btn.onclick = () => removeChecklistItem(Number(btn.dataset.removeCheckIndex)));
+
+      const toggleLinkBoxBtn = document.getElementById('toggleLinkBoxBtn');
+      if (toggleLinkBoxBtn) toggleLinkBoxBtn.onclick = () => { const box = document.getElementById('inlineLinkBox'); box.classList.toggle('open'); if (box.classList.contains('open')) document.getElementById('inlineLinkTitle').focus(); };
+      const saveInlineLinkBtn = document.getElementById('saveInlineLinkBtn');
+      if (saveInlineLinkBtn) saveInlineLinkBtn.onclick = addLinkFromDetail;
+      const inlineLinkUrl = document.getElementById('inlineLinkUrl');
+      if (inlineLinkUrl) inlineLinkUrl.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addLinkFromDetail(); } });
+      detailContent.querySelectorAll('[data-remove-link-index]').forEach(btn => btn.onclick = () => removeLinkFromDetail(Number(btn.dataset.removeLinkIndex)));
+
+      const toggleAttachmentBoxBtn = document.getElementById('toggleAttachmentBoxBtn');
+      if (toggleAttachmentBoxBtn) toggleAttachmentBoxBtn.onclick = () => document.getElementById('inlineAttachmentBox').classList.toggle('open');
+      const saveInlineAttachmentBtn = document.getElementById('saveInlineAttachmentBtn');
+      if (saveInlineAttachmentBtn) saveInlineAttachmentBtn.onclick = addAttachmentsFromDetail;
+      detailContent.querySelectorAll('[data-remove-attachment-index]').forEach(btn => btn.onclick = () => removeAttachmentFromDetail(Number(btn.dataset.removeAttachmentIndex)));
     }
 
-    document.getElementById('searchInput').addEventListener('input', render);
-    document.getElementById('statusFilter').addEventListener('change', render);
-    render();
+    function openValueHistoryModal(indicatorIndex){
+      state.valueHistoryModalIndicatorIndex = indicatorIndex;
+      renderValueHistoryModal();
+      valueHistoryModal.classList.add('open');
+      valueHistoryModal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeValueHistoryModal(){
+      valueHistoryModal.classList.remove('open');
+      valueHistoryModal.setAttribute('aria-hidden', 'true');
+      state.valueHistoryModalIndicatorIndex = null;
+    }
+
+    function renderValueHistoryModal(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      const indicator = obj?.indicators?.[state.valueHistoryModalIndicatorIndex];
+      document.getElementById('valueHistorySubtitle').textContent = `Indicador: ${indicator ? indicator.name : '—'}`;
+      if (!indicator) {
+        valueHistoryContent.innerHTML = '<div class="value-history-empty">No se encontró el indicador.</div>';
+        return;
+      }
+      const entries = Array.isArray(indicator.valueHistory) ? indicator.valueHistory : [];
+      if (!entries.length) {
+        valueHistoryContent.innerHTML = '<div class="value-history-empty">No hay registros del valor actual para este indicador.</div>';
+        return;
+      }
+      valueHistoryContent.innerHTML = `
+        <div class="value-history-table-wrap">
+          <table class="value-history-table">
+            <thead>
+              <tr>
+                <th>Fecha del Registro</th>
+                <th>Valor Actual Registrado</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${entries.map(entry => `
+                <tr>
+                  <td>${formatDateTime(entry.timestamp)}<span class="history-subnote">${escapeHtml(entry.actor || 'Sistema')}</span></td>
+                  <td>${escapeHtml(entry.value)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function addCommentFromDetail(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const author = document.getElementById('newCommentAuthor').value.trim();
+      const text = document.getElementById('newCommentText').value.trim();
+      if (!text) return alert('Escribe un comentario.');
+      obj.comments.unshift({ author, text, date: new Date().toISOString().slice(0,10) });
+      obj.history.unshift(`Comentario agregado por ${author} el ${new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(new Date())}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function addInlineTagToDetail(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const input = document.getElementById('inlineTagInput');
+      const value = input.value.trim();
+      if (!value) return;
+      if (!obj.tags.includes(value)){
+        obj.tags.push(value);
+        obj.history.unshift(`Etiqueta agregada: ${value}.`);
+        persistObjectives();
+        renderDetailModal();
+        renderObjectives();
+      } else {
+        input.value = '';
+      }
+    }
+
+    function removeDetailTag(index){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const removed = obj.tags.splice(index, 1)[0];
+      if (removed) obj.history.unshift(`Etiqueta eliminada: ${removed}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function addReminderFromDetail(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const textValue = document.getElementById('inlineReminderText').value.trim();
+      const dueDate = document.getElementById('inlineReminderDate').value;
+      if (!textValue) return alert('Escribe un recordatorio.');
+      obj.reminders.push({ text: textValue, dueDate });
+      obj.history.unshift(`Recordatorio agregado: ${textValue}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function removeReminderFromDetail(index){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const removed = obj.reminders.splice(index, 1)[0];
+      if (removed) obj.history.unshift(`Recordatorio eliminado: ${removed.text}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function addChecklistItemFromDetail(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const textValue = document.getElementById('inlineChecklistText').value.trim();
+      if (!textValue) return alert('Escribe un elemento del check list.');
+      obj.checklist.push({ text: textValue, done: false });
+      obj.history.unshift(`Elemento agregado a check list: ${textValue}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function toggleChecklistItem(index, checked){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj || !obj.checklist[index]) return;
+      obj.checklist[index].done = Boolean(checked);
+      obj.history.unshift(`Check list ${checked ? 'completado' : 'reabierto'}: ${obj.checklist[index].text}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function removeChecklistItem(index){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const removed = obj.checklist.splice(index, 1)[0];
+      if (removed) obj.history.unshift(`Elemento eliminado de check list: ${removed.text}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function addLinkFromDetail(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const title = document.getElementById('inlineLinkTitle').value.trim();
+      const url = document.getElementById('inlineLinkUrl').value.trim();
+      if (!title && !url) return alert('Agrega un nombre o una URL.');
+      obj.links.push({ title: title || url, url });
+      obj.history.unshift(`Enlace agregado: ${title || url}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function removeLinkFromDetail(index){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const removed = obj.links.splice(index, 1)[0];
+      if (removed) obj.history.unshift(`Enlace eliminado: ${removed.title || removed.url}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function addAttachmentsFromDetail(){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const input = document.getElementById('inlineAttachmentInput');
+      const files = Array.from(input.files || []);
+      if (!files.length) return alert('Selecciona al menos un archivo.');
+      files.forEach(file => {
+        obj.attachments.push({ name: file.name, size: file.size, addedAt: new Date().toISOString() });
+      });
+      obj.history.unshift(`${files.length} archivo(s) adjuntos registrados.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    function removeAttachmentFromDetail(index){
+      const obj = state.objectives.find(item => item.id === state.detailId);
+      if (!obj) return;
+      const removed = obj.attachments.splice(index, 1)[0];
+      if (removed) obj.history.unshift(`Archivo adjunto eliminado: ${removed.name}.`);
+      persistObjectives();
+      renderDetailModal();
+      renderObjectives();
+    }
+
+    document.getElementById('openFormBtn').addEventListener('click', () => { resetForm(); openFormModal(); });
+    document.getElementById('closeFormBtn').addEventListener('click', () => { closeFormModal(); resetForm(); });
+    document.getElementById('saveObjectiveBtn').addEventListener('click', saveObjective);
+    document.getElementById('addIndicatorBtn').addEventListener('click', () => addIndicatorRow());
+    document.getElementById('addActivityBtn').addEventListener('click', () => addActivityRow());
+    document.getElementById('addTagBtn').addEventListener('click', addFormTag);
+    document.getElementById('closeIndicatorBtn').addEventListener('click', closeIndicatorModal);
+    document.getElementById('saveIndicatorBtn').addEventListener('click', saveIndicatorFromModal);
+    document.getElementById('closeValueHistoryBtn').addEventListener('click', closeValueHistoryModal);
+    document.getElementById('closeMetaPlanBtn').addEventListener('click', closeMetaPlanModal);
+    document.getElementById('saveMetaPlanBtn').addEventListener('click', saveMetaPlanFromModal);
+    document.getElementById('addMetaPlanRowBtn').addEventListener('click', () => addMetaPlanRow());
+    document.getElementById('closeActivityBtn').addEventListener('click', closeActivityModal);
+    document.getElementById('saveActivityBtn').addEventListener('click', saveActivityFromModal);
+    document.getElementById('tagInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addFormTag(); } });
+    document.getElementById('searchInput').addEventListener('input', renderObjectives);
+    document.getElementById('statusFilter').addEventListener('change', renderObjectives);
+
+    [formModal, detailModal, indicatorModal, valueHistoryModal, metaPlanModal, activityModal].forEach(modal => modal.addEventListener('click', (e) => {
+      if (e.target === modal){
+        if (modal === formModal){ closeFormModal(); resetForm(); }
+        if (modal === detailModal) closeDetailModal();
+        if (modal === indicatorModal) closeIndicatorModal();
+        if (modal === valueHistoryModal) closeValueHistoryModal();
+        if (modal === metaPlanModal) closeMetaPlanModal();
+        if (modal === activityModal) closeActivityModal();
+      }
+    }));
+
+    document.getElementById('modalIndicatorName').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveIndicatorFromModal();
+      }
+    });
+    document.getElementById('modalActivityName').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveActivityFromModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape'){
+        closeFormModal();
+        closeDetailModal();
+        closeIndicatorModal();
+        closeValueHistoryModal();
+        closeMetaPlanModal();
+        closeActivityModal();
+      }
+    });
+
+    resetForm();
+    renderObjectives();
   </script>
 </body>
 </html>
