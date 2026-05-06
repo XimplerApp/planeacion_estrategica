@@ -864,7 +864,7 @@
 
     const sampleObjectives = [
       {
-        id: crypto.randomUUID(),
+        id: 'sample_obj_001',
         planningId: 'plan_demo_2026',
         name: 'Recuperar Cartera Vencida',
         description: 'Recuperar cartera vencida correspondiente al periodo 2019 y 2020.',
@@ -886,7 +886,7 @@
         history: ['Objetivo creado el 13-may-2021.']
       },
       {
-        id: crypto.randomUUID(),
+        id: 'sample_obj_002',
         planningId: 'plan_demo_2026',
         name: 'Posicionar la marca en redes sociales',
         description: 'Incrementar notoriedad y tracción digital de marca en redes clave.',
@@ -2014,6 +2014,10 @@
       state.detailId = id;
       state.detailTab = 'comments';
       state.detailIndicatorView = 'active';
+      const found = state.objectives.find(item => item.id === id);
+      if (!found) {
+        console.warn('[openDetailModal] Objetivo no encontrado con id:', id, '| IDs disponibles:', state.objectives.map(o=>o.id));
+      }
       renderDetailModal();
       detailModal.classList.add('open');
       detailModal.setAttribute('aria-hidden', 'false');
@@ -2040,11 +2044,26 @@
     }
 
     function renderDetailModal(){
+      try {
       const obj = state.objectives.find(item => item.id === state.detailId);
       if (!obj){
         detailContent.innerHTML = '<div class="detail-shell"><div class="detail-panel">No se encontró el objetivo.</div></div>';
         return;
       }
+
+      // Defensive normalization: ensure all array fields exist (protects against old localStorage data)
+      if (!Array.isArray(obj.activities))     obj.activities     = [];
+      if (!Array.isArray(obj.indicators))     obj.indicators     = [];
+      if (!Array.isArray(obj.reminders))      obj.reminders      = [];
+      if (!Array.isArray(obj.checklist))      obj.checklist      = [];
+      if (!Array.isArray(obj.links))          obj.links          = [];
+      if (!Array.isArray(obj.attachments))    obj.attachments    = [];
+      if (!Array.isArray(obj.tags))           obj.tags           = [];
+      if (!Array.isArray(obj.areas))          obj.areas          = [];
+      if (!Array.isArray(obj.linkedProjects)) obj.linkedProjects = [];
+      if (!Array.isArray(obj.comments))       obj.comments       = [];
+      if (!Array.isArray(obj.history))        obj.history        = [];
+      if (!Array.isArray(obj.invited))        obj.invited        = [];
 
       const ql = calculateQualitativeProgress(obj.activities);
       const qt = calculateQuantitativeProgress(obj.indicators);
@@ -2152,7 +2171,7 @@
 
                 <div class="tab-pane ${state.detailTab === 'comments' ? 'active' : ''}">
                   <div class="comment-list">
-                    ${obj.comments.length ? obj.comments.map(buildCommentMarkup).join('') : '<div class="simple-card muted">Sin comentarios registrados.</div>'}
+                    ${(obj.comments||[]).length ? (obj.comments||[]).map(buildCommentMarkup).join('') : '<div class="simple-card muted">Sin comentarios registrados.</div>'}
                   </div>
                   <div class="comment-form">
                     <select id="newCommentAuthor" class="select">
@@ -2165,7 +2184,7 @@
 
                 <div class="tab-pane ${state.detailTab === 'history' ? 'active' : ''}">
                   <div class="history-list">
-                    ${obj.history.length ? obj.history.map(item => `<div class="history-card">${renderHistoryEntry(escapeHtml(item))}</div>`).join('') : '<div class="simple-card muted">Sin historial registrado.</div>'}
+                    ${(obj.history||[]).length ? (obj.history||[]).map(item => `<div class="history-card">${renderHistoryEntry(escapeHtml(item))}</div>`).join('') : '<div class="simple-card muted">Sin historial registrado.</div>'}
                   </div>
                 </div>
               </div>
@@ -2178,7 +2197,7 @@
                   <button class="btn-secondary small" type="button" id="detailAddActivityBtn">Agregar +</button>
                 </div>
                 <div class="activity-list-scroll">
-                  ${obj.activities.length ? obj.activities.map((item, index) => `<div class="activity-card"><div class="head"><span>${escapeHtml(item.name)}</span><div class="activity-header-right"><span>${Number(item.progress || 0)}%</span><button class="btn-secondary small btn-tight" type="button" data-edit-activity-index="${index}">Editar</button></div></div><div class="tiny-progress"><div style="width:${Number(item.progress || 0)}%; background:${getProgressColor(Number(item.progress || 0))};"></div></div><div class="activity-meta"><div><strong>Responsable:</strong> ${escapeHtml(item.owner || '—')}</div><div><strong>Estatus:</strong> ${escapeHtml(item.status || '—')}</div><div><strong>Fecha:</strong> ${formatDate(item.dueDate)}</div><div class="initiative-actions"><button class="btn-secondary small btn-tight" type="button" data-open-actions-detail-index="${index}">Asignar Acción</button><span>${(item.actions || []).length} acción(es)</span></div></div></div>`).join('') : '<div class="simple-card muted">Sin iniciativas registradas.</div>'}
+                  ${(obj.activities||[]).length ? (obj.activities||[]).map((item, index) => `<div class="activity-card"><div class="head"><span>${escapeHtml(item.name)}</span><div class="activity-header-right"><span>${Number(item.progress || 0)}%</span><button class="btn-secondary small btn-tight" type="button" data-edit-activity-index="${index}">Editar</button></div></div><div class="tiny-progress"><div style="width:${Number(item.progress || 0)}%; background:${getProgressColor(Number(item.progress || 0))};"></div></div><div class="activity-meta"><div><strong>Responsable:</strong> ${escapeHtml(item.owner || '—')}</div><div><strong>Estatus:</strong> ${escapeHtml(item.status || '—')}</div><div><strong>Fecha:</strong> ${formatDate(item.dueDate)}</div><div class="initiative-actions"><button class="btn-secondary small btn-tight" type="button" data-open-actions-detail-index="${index}">Asignar Acción</button><span>${(item.actions || []).length} acción(es)</span></div></div></div>`).join('') : '<div class="simple-card muted">Sin iniciativas registradas.</div>'}
                 </div>
               </div>
 
@@ -2188,7 +2207,7 @@
                   <button class="btn-secondary small" type="button" id="toggleReminderBoxBtn">Agregar</button>
                 </div>
                 <div class="section-mini-list">
-                  ${obj.reminders.length ? obj.reminders.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.text)}</span><button class="btn-light small btn-tight" type="button" data-remove-reminder-index="${index}">Quitar</button></div><div class="mini-item-sub">${item.dueDate ? `Fecha: ${formatDate(item.dueDate)}` : 'Sin fecha'}${item.dueTime ? ` · Hora: ${formatTime(item.dueTime)}` : ''}</div></div>`).join('') : '<div class="muted">No hay recordatorios</div>'}
+                  ${(obj.reminders||[]).length ? (obj.reminders||[]).map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.text)}</span><button class="btn-light small btn-tight" type="button" data-remove-reminder-index="${index}">Quitar</button></div><div class="mini-item-sub">${item.dueDate ? `Fecha: ${formatDate(item.dueDate)}` : 'Sin fecha'}${item.dueTime ? ` · Hora: ${formatTime(item.dueTime)}` : ''}</div></div>`).join('') : '<div class="muted">No hay recordatorios</div>'}
                 </div>
                 <div class="inline-add stack" id="inlineReminderBox">
                   <input id="inlineReminderText" class="input" type="text" placeholder="Escribe un recordatorio" />
@@ -2206,7 +2225,7 @@
                   <div class="tag-tools"><button class="icon-btn plus-mini" type="button" id="toggleInlineTagBtn">+</button></div>
                 </div>
                 <div class="chips" id="detailTagsWrap">
-                  ${obj.tags.length ? obj.tags.map((tag, index) => `<span class="tag">${escapeHtml(tag)} <button type="button" data-remove-detail-tag="${index}">×</button></span>`).join('') : '<span class="muted">Sin etiquetas.</span>'}
+                  ${(obj.tags||[]).length ? (obj.tags||[]).map((tag, index) => `<span class="tag">${escapeHtml(tag)} <button type="button" data-remove-detail-tag="${index}">×</button></span>`).join('') : '<span class="muted">Sin etiquetas.</span>'}
                 </div>
                 <div class="inline-add" id="inlineTagBox">
                   <input id="inlineTagInput" class="input" type="text" placeholder="Nueva etiqueta" />
@@ -2220,7 +2239,7 @@
                   <button class="btn-secondary small" type="button" id="toggleChecklistBoxBtn">Agregar</button>
                 </div>
                 <div>
-                  ${obj.checklist.length ? `<div class="check-header"><span></span><span>Punto</span><span>Fecha compromiso</span><span></span></div>` + obj.checklist.map((item, index) => `<div class="check-row ${item.done ? 'done' : ''}"><input type="checkbox" ${item.done ? 'checked' : ''} data-toggle-check-index="${index}" /><input class="input check-edit-text" type="text" value="${escapeHtml(item.text)}" data-edit-check-text="${index}" /><input class="input check-edit-date" type="date" value="${escapeHtml(item.dueDate || '')}" data-edit-check-date="${index}" /><button class="btn-light small btn-tight" type="button" data-remove-check-index="${index}">Quitar</button></div>`).join('') : '<div class="muted">Sin elementos en check list</div>'}
+                  ${(obj.checklist||[]).length ? `<div class="check-header"><span></span><span>Punto</span><span>Fecha compromiso</span><span></span></div>` + (obj.checklist||[]).map((item, index) => `<div class="check-row ${item.done ? 'done' : ''}"><input type="checkbox" ${item.done ? 'checked' : ''} data-toggle-check-index="${index}" /><input class="input check-edit-text" type="text" value="${escapeHtml(item.text)}" data-edit-check-text="${index}" /><input class="input check-edit-date" type="date" value="${escapeHtml(item.dueDate || '')}" data-edit-check-date="${index}" /><button class="btn-light small btn-tight" type="button" data-remove-check-index="${index}">Quitar</button></div>`).join('') : '<div class="muted">Sin elementos en check list</div>'}
                 </div>
                 <div class="inline-add stack" id="inlineChecklistBox">
                   <input id="inlineChecklistText" class="input" type="text" placeholder="Nuevo elemento" />
@@ -2235,7 +2254,7 @@
                   <button class="btn-secondary small" type="button" id="toggleLinkBoxBtn">Agregar enlace</button>
                 </div>
                 <div class="section-mini-list">
-                  ${obj.links.length ? obj.links.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><a class="link-anchor" href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title || item.url || 'Enlace')}</a><button class="btn-light small btn-tight" type="button" data-remove-link-index="${index}">Quitar</button></div><div class="mini-item-sub">${escapeHtml(item.url || '')}</div></div>`).join('') : '<div class="muted">Sin enlaces</div>'}
+                  ${(obj.links||[]).length ? (obj.links||[]).map((item, index) => `<div class="mini-item"><div class="mini-item-head"><a class="link-anchor" href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title || item.url || 'Enlace')}</a><button class="btn-light small btn-tight" type="button" data-remove-link-index="${index}">Quitar</button></div><div class="mini-item-sub">${escapeHtml(item.url || '')}</div></div>`).join('') : '<div class="muted">Sin enlaces</div>'}
                 </div>
                 <div class="inline-add stack" id="inlineLinkBox">
                   <input id="inlineLinkTitle" class="input" type="text" placeholder="Nombre del enlace" />
@@ -2249,7 +2268,7 @@
                   <h3 style="margin:0">Áreas</h3>
                   <div class="tag-tools"><button class="icon-btn plus-mini" type="button" id="toggleInlineAreaBtn">+</button></div>
                 </div>
-                <div class="chips">${obj.areas.length ? obj.areas.map((area, index) => `<span class="tag">${escapeHtml(area)} <button type="button" data-remove-area-index="${index}">×</button></span>`).join('') : '<span class="muted">Sin registros.</span>'}</div>
+                <div class="chips">${(obj.areas||[]).length ? (obj.areas||[]).map((area, index) => `<span class="tag">${escapeHtml(area)} <button type="button" data-remove-area-index="${index}">×</button></span>`).join('') : '<span class="muted">Sin registros.</span>'}</div>
                 <div class="inline-add" id="inlineAreaBox">
                   <input id="inlineAreaInput" class="input" type="text" placeholder="Nueva área" />
                   <button class="btn-secondary" type="button" id="saveInlineAreaBtn">Agregar</button>
@@ -2261,7 +2280,7 @@
                   <h3 style="margin:0">Ligado a</h3>
                   <div class="tag-tools"><button class="icon-btn plus-mini" type="button" id="toggleInlineProjectBtn">+</button></div>
                 </div>
-                <div class="chips">${obj.linkedProjects.length ? obj.linkedProjects.map((project, index) => `<span class="tag">${escapeHtml(project)} <button type="button" data-remove-project-index="${index}">×</button></span>`).join('') : '<span class="muted">Sin proyectos ligados.</span>'}</div>
+                <div class="chips">${(obj.linkedProjects||[]).length ? (obj.linkedProjects||[]).map((project, index) => `<span class="tag">${escapeHtml(project)} <button type="button" data-remove-project-index="${index}">×</button></span>`).join('') : '<span class="muted">Sin proyectos ligados.</span>'}</div>
                 <div class="inline-add" id="inlineProjectBox">
                   <input id="inlineProjectInput" class="input" type="text" placeholder="Nuevo proyecto ligado" />
                   <button class="btn-secondary" type="button" id="saveInlineProjectBtn">Agregar</button>
@@ -2274,7 +2293,7 @@
                   <button class="btn-secondary small" type="button" id="toggleAttachmentBoxBtn">Adjuntar archivos</button>
                 </div>
                 <div class="section-mini-list">
-                  ${obj.attachments.length ? obj.attachments.map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.name)}</span><div class="mini-item-actions">${item.dataUrl ? `<a class="btn-secondary small btn-tight attachment-anchor-btn" href="${item.dataUrl}" target="_blank" rel="noopener noreferrer">Ver</a><a class="btn-light small btn-tight attachment-anchor-btn" href="${item.dataUrl}" download="${escapeHtml(item.name)}">Descargar</a>` : ''}<button class="btn-light small btn-tight" type="button" data-remove-attachment-index="${index}">Quitar</button></div></div><div class="mini-item-sub">${formatFileSize(item.size)} · ${formatDateTime(item.addedAt)}</div></div>`).join('') : '<div class="muted">Sin archivos adjuntos</div>'}
+                  ${(obj.attachments||[]).length ? (obj.attachments||[]).map((item, index) => `<div class="mini-item"><div class="mini-item-head"><span class="mini-item-title">${escapeHtml(item.name)}</span><div class="mini-item-actions">${item.dataUrl ? `<a class="btn-secondary small btn-tight attachment-anchor-btn" href="${item.dataUrl}" target="_blank" rel="noopener noreferrer">Ver</a><a class="btn-light small btn-tight attachment-anchor-btn" href="${item.dataUrl}" download="${escapeHtml(item.name)}">Descargar</a>` : ''}<button class="btn-light small btn-tight" type="button" data-remove-attachment-index="${index}">Quitar</button></div></div><div class="mini-item-sub">${formatFileSize(item.size)} · ${formatDateTime(item.addedAt)}</div></div>`).join('') : '<div class="muted">Sin archivos adjuntos</div>'}
                 </div>
                 <div class="inline-add stack" id="inlineAttachmentBox">
                   <div class="file-upload-wrap">
@@ -2413,6 +2432,10 @@
       const saveInlineAttachmentBtn = document.getElementById('saveInlineAttachmentBtn');
       if (saveInlineAttachmentBtn) saveInlineAttachmentBtn.onclick = addAttachmentsFromDetail;
       detailContent.querySelectorAll('[data-remove-attachment-index]').forEach(btn => btn.onclick = () => removeAttachmentFromDetail(Number(btn.dataset.removeAttachmentIndex)));
+      } catch(err) {
+        console.error('[renderDetailModal] Error al renderizar el detalle del objetivo:', err);
+        detailContent.innerHTML = '<div class="detail-shell"><div class="detail-panel" style="color:var(--red);padding:24px"><strong>Error al cargar el detalle.</strong><br><br>Detalle técnico: ' + err.message + '</div></div>';
+      }
     }
 
     function openValueHistoryModal(indicatorIndex){
