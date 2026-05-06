@@ -951,10 +951,19 @@
         if (!detailBtn) return;
         e.preventDefault();
         e.stopPropagation();
-        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
         openDetailModal(detailBtn.getAttribute('data-view-id'));
       }, true);
     }
+
+    window.__openObjectiveDetail = function(button){
+      const id = button?.getAttribute?.('data-view-id');
+      if (!id) {
+        alert('No se encontró el ID del objetivo para abrir el detalle.');
+        return false;
+      }
+      openDetailModal(id);
+      return false;
+    };
 
     function normalizeComment(comment){
       if (typeof comment === 'string') return { author:'Sistema', text:comment, date:new Date().toISOString().slice(0,10) };
@@ -1115,7 +1124,19 @@
 
     function persistObjectives(){ localStorage.setItem(SAVE_KEY, JSON.stringify(state.objectives)); }
     function sameId(a, b){ return String(a) === String(b); }
-    function formatDate(dateString){ if (!dateString) return '—'; const date = new Date(dateString + 'T00:00:00'); return new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(date); }
+    function parseFlexibleDate(value){
+      if (!value) return null;
+      if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
+      const raw = String(value).trim();
+      if (!raw) return null;
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? new Date(raw + 'T00:00:00') : new Date(raw);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+    function formatDate(dateString){
+      const date = parseFlexibleDate(dateString);
+      if (!date) return '—';
+      return new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric' }).format(date);
+    }
     function statusLabel(status){ return ({activo:'Activo', en_riesgo:'En riesgo', pausado:'Pausado', cumplido:'Cumplido'})[status] || status; }
     function getProgressColor(value){ if (value >= 80) return 'var(--green)'; if (value >= 50) return 'var(--yellow)'; return 'var(--red)'; }
     function getEffectiveTarget(indicator = {}, referenceDate = new Date()){
@@ -1168,7 +1189,8 @@
     function calculateQualitativeProgress(activities=[]){ if (!activities.length) return 0; const vals = activities.map(item => Math.max(0, Math.min(100, Number(item.progress || 0)))); return Math.round(vals.reduce((a,b)=>a+b,0) / vals.length); }
     function uniqueParticipants(obj){ return Array.from(new Set([obj.createdBy, obj.leader, ...(obj.invited || [])].filter(Boolean))); }
     function formatDateTime(date = new Date()){
-      const value = date instanceof Date ? date : new Date(date);
+      const value = parseFlexibleDate(date);
+      if (!value) return '—';
       return new Intl.DateTimeFormat('es-MX', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }).format(value);
     }
     function formatTime(timeString){
@@ -1382,7 +1404,7 @@
       const obj = state.objectives.find(item => sameId(item.id, id));
       if (!obj) return;
       if (!confirm(`¿Seguro que deseas eliminar el objetivo "${obj.name}"?`)) return;
-      state.objectives = state.objectives.filter(item => item.id !== id);
+      state.objectives = state.objectives.filter(item => !sameId(item.id, id));
       persistObjectives();
       renderObjectives();
       if (sameId(state.detailId, id)) closeDetailModal();
@@ -1570,7 +1592,7 @@
           <td><span class="status-badge status-${obj.status}">${statusLabel(obj.status)}</span></td>
           <td>
             <div class="actions-inline">
-              <button class="btn-light small" type="button" data-view-id="${obj.id}">Detalles</button>
+              <button class="btn-light small" type="button" data-view-id="${escapeHtml(obj.id)}" onclick="return window.__openObjectiveDetail(this)">Detalles</button>
               <button class="btn-secondary small" type="button" data-edit-id="${obj.id}">Editar</button>
               <button class="btn-danger small" type="button" data-delete-id="${obj.id}">Eliminar</button>
             </div>
@@ -1625,7 +1647,7 @@
         btn.onclick = (e) => {
           e.preventDefault();
           e.stopPropagation();
-          openDetailModal(btn.dataset.viewId);
+          openDetailModal(btn.getAttribute('data-view-id'));
         };
       });
       document.querySelectorAll('[data-edit-id]').forEach(btn => btn.onclick = () => startEdit(btn.dataset.editId));
@@ -2034,15 +2056,23 @@
     function openDetailModal(id){
       const obj = state.objectives.find(item => sameId(item.id, id));
       if (!obj) {
+        console.warn('No se encontró objetivo para detalle:', id, state.objectives.map(item => item.id));
         alert('No se pudo abrir el detalle del objetivo. Revisa que el objetivo tenga un ID válido.');
         return;
       }
-      state.detailId = obj.id;
-      state.detailTab = 'comments';
-      state.detailIndicatorView = 'active';
-      renderDetailModal();
-      detailModal.classList.add('open');
-      detailModal.setAttribute('aria-hidden', 'false');
+      try {
+        state.detailId = obj.id;
+        state.detailTab = 'comments';
+        state.detailIndicatorView = 'active';
+        renderDetailModal();
+        detailModal.classList.add('open');
+        detailModal.setAttribute('aria-hidden', 'false');
+      } catch (error) {
+        console.error('Error al abrir detalle del objetivo:', error);
+        detailContent.innerHTML = `<div class="detail-shell"><div class="detail-topbar"><div class="detail-title-row"><button class="icon-btn" type="button" onclick="closeDetailModal()">←</button><h2>${escapeHtml(obj.name || 'Detalle del objetivo')}</h2></div></div><div class="detail-panel"><h3>No se pudo renderizar el detalle completo</h3><div class="desc-text">El objetivo existe, pero algún dato guardado tiene un formato inválido. Error: ${escapeHtml(error.message || error)}</div><button class="btn-secondary" type="button" onclick="startEdit('${String(obj.id).replace(/'/g, "\\'")}')">Editar objetivo</button></div></div>`;
+        detailModal.classList.add('open');
+        detailModal.setAttribute('aria-hidden', 'false');
+      }
     }
 
     function closeDetailModal(){
