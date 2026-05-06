@@ -942,6 +942,20 @@
     const initiativeActionsContent = document.getElementById('initiativeActionsContent');
     const actionDetailModal = document.getElementById('actionDetailModal');
 
+    // FIX GitHub Pages / navegación dinámica:
+    // Captura el click de Detalles directamente desde el tbody antes de cualquier otro listener.
+    // Esto evita que el botón dependa de reasignaciones onclick después de renderizar filas.
+    if (objectivesBody) {
+      objectivesBody.addEventListener('click', function(e){
+        const detailBtn = e.target.closest('[data-view-id]');
+        if (!detailBtn) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+        openDetailModal(detailBtn.getAttribute('data-view-id'));
+      }, true);
+    }
+
     function normalizeComment(comment){
       if (typeof comment === 'string') return { author:'Sistema', text:comment, date:new Date().toISOString().slice(0,10) };
       return { author: comment?.author || 'Sistema', text: comment?.text || '', date: comment?.date || new Date().toISOString().slice(0,10) };
